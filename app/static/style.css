@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@font-face {
+  font-family: wenyue;
+  src: url(WenYue-XinQingNianTi-W8-J.otf);
+}
+
+/* Text Formatting */
+
+p {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: center;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+
+redp {
+  color: #FF573D;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 600;
+  text-align: center;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+
+ilp {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: left;
+  margin-right: 5%;
+  line-height: 20px;
+}
+
+boxp {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: center;
+}
+
+pheader{
+  color: black;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 48pt;
+  text-align: center;
+  font-weight: 700;
+}
+
+h1 {
+  color: black;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 24pt;
+  text-align: center;
+  font-weight: 700;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+h2 {
+  color: black;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 20pt;
+  text-align: center;
+  font-weight: 700;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+h3 {
+  color: black;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 18pt;
+  font-weight: 700;
+  text-align: left;
+  margin-right: 5%;
+  line-height: 20px;
+}
+
+p2 {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  text-align: center;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+
+li {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: center;
+}
+
+li span {
+  position: relative;
+}
+
+ul {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: center;
+  display: inline-block;
+}
+
+snavbold {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Image Divs */
+
+.image {
+  margin-left: 20%; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+  object-fit: contain;
+}
+
+.container {
+  margin-left: 20%;
+  position: relative;
+  text-align: center;
+  color: black;
+}
+
+.gall {
+  margin-left: 15%;
+  position: relative;
+  color: black;
+  height: 20%;
+  width: 80;
+}
+
+.imagecentered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mainimg {
+  display: flex;
+  justify-content: center;
+}
+
+/* Divs */
+
+.main {
+  margin-left: 20%; /* Same as the width of the sidenav */
+  width: 80%;
+  height: 100%;
+  object-fit: fill;
+  text-align: center;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 24px;}
+}
+
+/* Sidebar */
+.navbar {
+  width: 100%;
+  background-color: white;
+  overflow: auto;
+}
+
+.navbar a {
+  float: left;
+  color: black;
+  font-family: "Lora";
+  text-decoration: none;
+  font-size: 17px;
+  width: 20%; /* Four links of equal widths */
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.navbar a:hover {
+  background-color: #adadad;
+}
+
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Popup */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #000898; /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #000561;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  text-align: center;
+  font-family: "Lora", serif;
+  font-size: 18px;
+  padding: 20px;
+  width: 300px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.button2 {background-color:#EA4335;} /*Gmail*/
+.button3 {background-color:#5865F2;} /*Discord*/
+.button4 {background-color:#25D366;} /*Whatsapp*/
+.button5 {background-color:#f54842;} /*download*/
+.button-il {
+  width: 150px;
+  cursor: not-allowed;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.button-il span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+  cursor: not-allowed;
+}
+
+.button-il:hover span {
+  padding-right: 25px;
+  cursor: not-allowed
+}
+
+.button-il:hover span:after {
+  opacity: 1;
+  right: 0;
+  cursor: not-allowed;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+bp2 {
+  color: black;
+  font-family: "Lora", serif;
+  font-size: 14pt;
+  font-weight: 400;
+  text-align: center;
+  cursor: not-allowed;
+}
+
+.bottom_aligner {
+    display: inline-block;
+    height: 55%;
+    vertical-align: bottom;
+    width: 0px;
+}
+
+.centerimage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
