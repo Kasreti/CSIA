@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create new word</title>
+    <title>Editing {{ word }}</title>
 </head>
 <body>
 {% extends "base.html" %}
@@ -62,7 +62,7 @@
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
-        <p> {{ form.csubmit() }} </p>
+        <p> {{ form.esubmit() }} </p>
     </form>
 {% endblock %}
 </body>

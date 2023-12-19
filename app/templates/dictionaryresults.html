@@ -12,7 +12,7 @@
         <hr>
         {% for match in matches %}
         <a href="{{ url_for('word', name=match.word) }}"><h2>{{ match.word }}</h2></a>
-        <lightp>{{ word.partofspeech }}. {{ match.definition }}</lightp>
+        <lightp>{{ match.partofspeech }}. {{ match.definition }}</lightp>
         {% endfor %}
         {% endblock %}
     </body>

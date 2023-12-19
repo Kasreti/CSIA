@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ term }}</title>
+    <title>{{ word.word }}</title>
 </head>
     <body>
         {% extends "base.html" %}
-        {% block content %}
-        <wordh1>{{ match.word }}</wordh1>
-        <wordh2>Etymology</wordh2>
-        <wordp>{{ match.etymology }}</wordp>
-        <wordh2>Pronunciation</wordh2>
-        <wordp>{{ match.pronunciation }}</wordp>
-        <wordh2>{{ match.partofspeech }}</wordh2>
-        <wordp>{{ match.definition }}</wordp>
-        wordh2>{{ match.notes }}</wordh2>
-        <wordp>{{ match.notes }}</wordp>
+        {% block content %}<br>
+        <wordh1>{{ word.word }}</wordh1>
+        <a href="{{ url_for('modifyword', name=word.word) }}">[edit]</a>
+        <a href="{{ url_for('deleteword', name=word.word) }}">[delete]</a><hr>
+        <wordh2>Etymology</wordh2><br>
+        <wordp>{{ word.etymology }}</wordp><br><br>
+        <wordh2>Pronunciation</wordh2><br>
+        <wordp>{{ word.pronunciation }}</wordp><br><br>
+        <wordh2>{{ word.partofspeech }}</wordh2><br>
+        <wordp>{{ word.definition }}</wordp><br><br>
+        <wordh2>Notes</wordh2><br>
+        <wordp>{{ word.notes }}</wordp>
         {% endblock %}
     </body>
 </html>

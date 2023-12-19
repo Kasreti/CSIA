@@ -16,11 +16,11 @@
 <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <lightp><i>
+        <lightp>
             {% for message in messages %}
             {{ message }}
             {% endfor %}
-        </i></lightp>
+        </lightp>
         <hr>
         {% endif %}
         {% endwith %}

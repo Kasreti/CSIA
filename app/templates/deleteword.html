@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete </title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+    <rh1>Are you sure you want to delete <em>{{ word.word }}</em>?</rh1><br>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <h3> {{ form.submit() }}
+        <a href="{{ url_for('word', name=word.word) }}"><button type="button">Cancel</button></h2></a></h3>
+    </form>
+
+{% endblock %}
+</body>
+</html>
