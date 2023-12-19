@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary - {{ term }}</title>
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block content %}
+        <h1>Results for {{ term }}</h1>
+        <h3 style="text-align:center, margin:auto"><a href="{{ url_for('dictionary') }}">⋘ Return to search page</a></h3>
+        <hr>
+        {% for match in matches %}
+        <h2>{{ match.word }}</h2>
+        <lightp>{{ match.partofspeech }}. {{ match.definition }}</lightp>
+        {% endfor %}
+        {% endblock %}
+    </body>
+</html>

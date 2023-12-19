@@ -1,7 +1,9 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord
+from app.forms import createWord, searchWord
 from app.models import Lexicon
+import sqlalchemy as sa
+import sqlalchemy.orm as so
 
 @app.route('/')
 @app.route('/index')
@@ -18,8 +20,22 @@ def createword():
         selectedpos = request.form.get('posselect')
         flash('{} {} created with definition {} and pronunciation {}.'.format(selectedpos, form.word.data, form.definition.data, form.pronunciation.data))
         newword = Lexicon(form.word.data, form.pronunciation.data, form.conscript.data, form.definition.data,
-                          selectedpos, form.inflection.data, form.wordclass.data, form.notes, form.etymology)
+                          selectedpos, form.inflection.data, form.wordclass.data, form.notes.data, form.etymology.data)
         db.session.add(newword)
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('createword.html', title='Create word', form=form, pos=pos)
+
+@app.route('/dictionary', methods=['GET', 'POST'])
+def dictionary():
+    form = searchWord()
+    if form.validate_on_submit():
+        session['term'] = form.term.data
+        return redirect(url_for('dictresults'))
+    return render_template('dictionary.html', form=form)
+
+@app.route('/dictresults', methods=['GET', 'POST'])
+def dictresults():
+    substring = session['term']
+    matches = Lexicon.query.filter(Lexicon.word.icontains(substring)).all() or Lexicon.query.filter(Lexicon.definition.icontains(substring)).all()
+    return render_template('dictionaryresults.html', term=substring, matches=matches)

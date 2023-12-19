@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary</title>
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block content %}
+        <h1>Dictionary</h1>
+         <form action="" method="post" novalidate style="text-align:center, margin:auto">
+            {{ form.hidden_tag() }}
+             <h3> {{ form.term.label }}<br>{{ form.term(size=16) }} {{ form.submit() }}
+                 <a href="{{ url_for('createword') }}"><button type="button">Create word</button> </a></h3>
+         </form>
+        {% endblock %}
+    </body>
+</html>
