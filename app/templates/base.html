@@ -2,17 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href='/static/style.css' />
     <title>Base template</title>
 </head>
 <body>
  <div class="navbar">
         <a href="#">Dictionary</a>
         <a href="#">Phonology</a>
-        <a href="#">Home</a>
+        <a href="{{ url_for('index') }}>Home</a>
         <a href="#">Inflections</a>
         <a href="#">Texts</a>
 </div>
- <hr>
+<hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <lightp><i>
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </i></lightp>
+        <hr>
+        {% endif %}
+        {% endwith %}
 {% block content %}{% endblock %}
 </body>
 </html>

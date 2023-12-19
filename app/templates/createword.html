@@ -5,6 +5,26 @@
     <title>Create new word</title>
 </head>
 <body>
-
+{% extends "base.html" %}
+{% block content %}
+    <h1>Create a new word</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.word.label }}<br>{{ form.word(size=16) }}
+            {% for error in form.word.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p> {{ form.pronunciation.label }}<br>{{ form.pronunciation(size=16) }} </p>
+        <p>
+            {{ form.definition.label }}<br>{{ form.definition(size=16) }}
+            {% for error in form.definition.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p> {{ form.submit() }} </p>
+    </form>
+{% endblock %}
 </body>
 </html>
