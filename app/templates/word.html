@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ term }}</title>
+</head>
+    <body>
+        {% extends "base.html" %}
+        {% block content %}
+        <wordh1>{{ match.word }}</wordh1>
+        <wordh2>Etymology</wordh2>
+        <wordp>{{ match.etymology }}</wordp>
+        <wordh2>Pronunciation</wordh2>
+        <wordp>{{ match.pronunciation }}</wordp>
+        <wordh2>{{ match.partofspeech }}</wordh2>
+        <wordp>{{ match.definition }}</wordp>
+        wordh2>{{ match.notes }}</wordh2>
+        <wordp>{{ match.notes }}</wordp>
+        {% endblock %}
+    </body>
+</html>

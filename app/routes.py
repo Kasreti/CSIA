@@ -37,5 +37,11 @@ def dictionary():
 @app.route('/dictresults', methods=['GET', 'POST'])
 def dictresults():
     substring = session['term']
-    matches = Lexicon.query.filter(Lexicon.word.icontains(substring)).all() or Lexicon.query.filter(Lexicon.definition.icontains(substring)).all()
+    matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(Lexicon.word).all() or
+               Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(Lexicon.word).all())
     return render_template('dictionaryresults.html', term=substring, matches=matches)
+
+@app.route('/word/<name>', methods=['GET', 'POST'])
+def word(name):
+    match = Lexicon.query.filter(Lexicon.word == name)
+    return render_template('word.html', word=match)

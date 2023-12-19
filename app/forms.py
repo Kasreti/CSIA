@@ -14,5 +14,5 @@ class createWord(FlaskForm):
     submit = SubmitField('Create')
 
 class searchWord(FlaskForm):
-    term = StringField('Search by word or definition:', validators=[DataRequired()])
+    term = StringField('Search by word or definition:')
     submit = SubmitField('Search')

@@ -12,6 +12,7 @@
             {{ form.hidden_tag() }}
              <h3> {{ form.term.label }}<br>{{ form.term(size=16) }} {{ form.submit() }}
                  <a href="{{ url_for('createword') }}"><button type="button">Create word</button> </a></h3>
+             <h4>Leave search bar empty to show all results.</h4>
          </form>
         {% endblock %}
     </body>

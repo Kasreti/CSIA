@@ -11,8 +11,8 @@
         <h3 style="text-align:center, margin:auto"><a href="{{ url_for('dictionary') }}">⋘ Return to search page</a></h3>
         <hr>
         {% for match in matches %}
-        <h2>{{ match.word }}</h2>
-        <lightp>{{ match.partofspeech }}. {{ match.definition }}</lightp>
+        <a href="{{ url_for('word', name=match.word) }}"><h2>{{ match.word }}</h2></a>
+        <lightp>{{ word.partofspeech }}. {{ match.definition }}</lightp>
         {% endfor %}
         {% endblock %}
     </body>
