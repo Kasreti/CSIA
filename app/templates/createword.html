@@ -10,19 +10,33 @@
     <h1>Create a new word</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.word.label }}<br>{{ form.word(size=16) }}
-            {% for error in form.word.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+
+            <h2>
+                {{ form.word.label }}<br>{{ form.word(size=16) }}
+                {% for error in form.word.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </h2>
+            <p> {{ form.conscript.label }}<br>{{ form.conscript(size=16) }} </p>
+        <p> {{ form.etymology.label }}<br>{{ form.etymology(size=16) }} </p>
         <p> {{ form.pronunciation.label }}<br>{{ form.pronunciation(size=16) }} </p>
-        <p>
-            {{ form.definition.label }}<br>{{ form.definition(size=16) }}
-            {% for error in form.definition.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+            <p>
+                {{ form.definition.label }}<br>{{ form.definition(size=48) }}
+                {% for error in form.definition.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                Part of speech<br>
+                <select name="posselect">
+                    {% for n in pos %}
+                        <option value="{{n}}" SELECTED>{{ n }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p> {{ form.wordclass.label }}<br>{{ form.wordclass(size=16) }} </p>
+        <p> {{ form.inflection.label }}<br>{{ form.inflection(size=16) }} </p>
+        <p> {{ form.notes.label }}<br>{{ form.notes(size=48) }} </p>
         <p> {{ form.submit() }} </p>
     </form>
 {% endblock %}
