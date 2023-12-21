@@ -39,7 +39,11 @@ def dictresults():
     substring = session['term']
     matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(Lexicon.word).all() or
                Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(Lexicon.word).all())
-    return render_template('dictionaryresults.html', term=substring, matches=matches)
+    if substring=="":
+        stitle = "Showing all results"
+    else:
+        stitle = "Results for " + substring
+    return render_template('dictionaryresults.html', term=substring, title=stitle, matches=matches)
 
 @app.route('/word/<name>', methods=['GET', 'POST'])
 def word(name):
