@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord, searchWord, deleteWord
+from app.forms import createWord, searchWord, deleteWord, ipatable
 from app.models import Lexicon
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -86,3 +86,7 @@ def deleteword(name):
         db.session.commit()
         return redirect(url_for('dictionary'))
     return render_template('deleteword.html', word=match, form=form)
+
+@app.route('/phonology', methods=['GET', 'POST'])
+def phonology():
+    return render_template('phonology.html', form=ipatable())
