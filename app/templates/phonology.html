@@ -11,6 +11,7 @@
 <p>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
+    <h3>Consonants</h3>
     <table>
         <tbody>
         <tr>
@@ -209,6 +210,7 @@
         </tbody>
     </table>
     <br>
+    <h3>Vowels</h3>
     <table>
         <tbody>
         <tr>
@@ -219,46 +221,59 @@
         </tr>
         <tr>
             <td>Close</td>
-            <td> <div class="ipa-button"><label>{{ form.nbilnsf(size=16, class_="grb") }}<span>ɸ</span></label>
-                    <br><label>{{ form.vbilnsf(size=16, class_="grb") }}<span>β</span></label></div></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.clfu(size=16, class_="grb") }}<span>i</span></label>
+                    <br><label>{{ form.clfr(size=16, class_="grb") }}<span>y</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.clcu(size=16, class_="grb") }}<span>ɨ</span></label>
+                    <br><label>{{ form.clfr(size=16, class_="grb") }}<span>ʉ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.clbu(size=16, class_="grb") }}<span>ɯ</span></label>
+                    <br><label>{{ form.clbr(size=16, class_="grb") }}<span>u</span></label></div></td>
         </tr>
         <tr>
             <td>Near-close</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.ncfu(size=16, class_="grb") }}<span>ɪ</span></label>
+                    <br><label>{{ form.ncfr(size=16, class_="grb") }}<span>ʏ</span></label></div></td>
+            <td class="graybg"></td>
+            <td><div class="ipa-button"><label>{{ form.ncbr(size=16, class_="grb") }}<span>ʊ</span></label></div></td>
         </tr>
         <tr>
             <td>Close-mid</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.cmfu(size=16, class_="grb") }}<span>e</span></label>
+                    <br><label>{{ form.cmfr(size=16, class_="grb") }}<span>ø</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.cmcu(size=16, class_="grb") }}<span>ɘ</span></label>
+                    <br><label>{{ form.cmcr(size=16, class_="grb") }}<span>ɵ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.cmbu(size=16, class_="grb") }}<span>ɤ</span></label>
+                    <br><label>{{ form.cmbr(size=16, class_="grb") }}<span>o</span></label></div></td>
         </tr>
         <tr>
             <td>Mid</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.mifu(size=16, class_="grb") }}<span>e̞</span></label>
+                    <br><label>{{ form.mifr(size=16, class_="grb") }}<span>ø̞</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.mic(size=16, class_="grb") }}<span>ə</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.mibu(size=16, class_="grb") }}<span>ɤ̞</span></label>
+                    <br><label>{{ form.mibr(size=16, class_="grb") }}<span>o̞</span></label></div></td>
         </tr>
         <tr>
             <td>Open-mid</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.omfu(size=16, class_="grb") }}<span>ɛ</span></label>
+                    <br><label>{{ form.omfr(size=16, class_="grb") }}<span>œ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.omcu(size=16, class_="grb") }}<span>ɜ</span></label>
+                    <br><label>{{ form.omcr(size=16, class_="grb") }}<span>ɞ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.ombu(size=16, class_="grb") }}<span>ʌ</span></label>
+                    <br><label>{{ form.ombr(size=16, class_="grb") }}<span>ɔ</span></label></div></td>
         </tr>
         <tr>
             <td>Near-open</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.nofu(size=16, class_="grb") }}<span>æ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.noc(size=16, class_="grb") }}<span>ɐ</span></label></div></td>
+            <td class="graybg"></td>
         </tr>
         <tr>
             <td>Open<br></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><div class="ipa-button"><label>{{ form.opfu(size=16, class_="grb") }}<span>a</span></label>
+                    <br><label>{{ form.opfr(size=16, class_="grb") }}<span>ɶ</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.opcu(size=16, class_="grb") }}<span>ä</span></label></div></td>
+            <td><div class="ipa-button"><label>{{ form.opbu(size=16, class_="grb") }}<span>ɑ</span></label>
+                    <br><label>{{ form.opbr(size=16, class_="grb") }}<span>ɒ</span></label></div></td>
         </tr>
         </tbody>
     </table>
