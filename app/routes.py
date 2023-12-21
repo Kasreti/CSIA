@@ -90,16 +90,19 @@ def deleteword(name):
 @app.route('/phonology', methods=['GET', 'POST'])
 def phonology():
     form = ipatable()
+    exists = Phonology.query.filter(Phonology.exists == True).all()
     if form.validate_on_submit():
-        flash('Phonology has been updated.')
+        flash('Phonological inventory, romanization and conscript systems have been updated.')
         for field in form:
             if field.name != 'csrf_token' and field.name != 'submit':
                 match = Phonology.query.filter(Phonology.phoneme == field.name).first()
                 match.exists = field.data
-                db.session.commit()
+        for temp in exists:
+            flash(request.form.get('rom vbilnas'))
+        db.session.commit()
         return redirect(url_for('phonology'))
     for field in form:
         if field.name != 'csrf_token' and field.name != 'submit':
             match = Phonology.query.filter(Phonology.phoneme == field.name).first()
             field.data = match.exists
-    return render_template('phonology.html', form=form)
+    return render_template('phonology.html', form=form, exists=exists)

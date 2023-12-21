@@ -7,11 +7,11 @@
 <body>
 {% extends "base.html" %}
 {% block content %}
-<h1>Phonological inventory manager</h1>
 <p>
 <form action="" method="post" novalidate>
+    <h1>Phonological inventory</h1><h3>{{ form.submit(class_="grb gena") }}</h3>
     {{ form.hidden_tag() }}
-    <h3>Consonants</h3>
+    <table align="center"><tr><td style="border: 0px;">
     <table>
         <tbody>
         <tr>
@@ -209,8 +209,7 @@
         </tr>
         </tbody>
     </table>
-    <br>
-    <h3>Vowels</h3>
+    </td><td style="border: 0px;">
     <table>
         <tbody>
         <tr>
@@ -277,8 +276,28 @@
         </tr>
         </tbody>
     </table>
-    <h3>{{ form.submit(class_="grb gena") }}</h3>
-</form>
+    </td></tr></table>
+
+<hr>
+<h1>Romanization and conscript</h1><h3>{{ form.submit(class_="grb gena") }}</h3>
+<table><tbody>
+<tr>
+    <td><b>Phoneme</b></td>
+    <td><b>Romanization</b></td>
+    <td><b>Conscript</b></td>
+</tr>
+{% for phoneme in exists %}
+<tr>
+    <td class="tnr">{{ phoneme.ipa }}</td>
+    <td>
+        <input type="text" name="rom {{ phoneme.phoneme }}" value="{{ phoneme.romanized }}">
+    </td>
+    <td>
+        <input type="text" name="con {{ phoneme.phoneme }}" value="{{ phoneme.conscript }}">
+    </td>
+</tr>
+{% endfor %}
+</tbody></table></form><br><br><br>
 {% endblock %}
 </body>
 </html>

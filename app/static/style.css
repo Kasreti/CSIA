@@ -297,6 +297,6 @@ div label input {
    margin-right:100px;
 }
 
-label {
+label, .tnr {
     font-family: "Times New Roman", serif;
 }
