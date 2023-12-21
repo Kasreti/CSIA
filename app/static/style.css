@@ -248,6 +248,7 @@ td, th, td[colspan="3"]{
   padding: 8px;
   text-align: center;
   vertical-align: middle;
+
 }
 
 table{
@@ -261,7 +262,7 @@ table{
 }
 
 /* ADAPTED BUTTON */
-#ipa-button {
+.ipa-button {
     margin:auto;
     display: block;
     background-color:#e7e7e7;
@@ -271,23 +272,23 @@ table{
     float:left;
 }
 
-#ipa-button label {
+.ipa-button label {
     float:left;
     width:4.0em;
 }
 
-#ipa-button span {
+.ipa-button span {
     text-align:center;
     padding:3px 0px;
     display:block;
 }
 
-#ipa-button label input {
+.ipa-button label input {
     position:absolute;
     top:-20px;
 }
 
-#ipa-button input:checked+span {
+.ipa-button input:checked+span {
     background-color:#04aa6d;
     color:#ffffff;
 }

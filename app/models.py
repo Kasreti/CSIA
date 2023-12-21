@@ -1,7 +1,7 @@
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import db
+from app import db, app
 
 class Lexicon(db.Model):
     __tablename__ = 'Lexicon'
@@ -28,3 +28,26 @@ class Lexicon(db.Model):
         self.infclass = infclass
         self.etymology = etymology
         self.partofspeech = partofspeech
+
+class Phonology(db.Model):
+    __tablename__ = 'Phonology'
+    phoneme: so.Mapped[str] = so.mapped_column(primary_key=True)
+    ipa: so.Mapped[str] = so.mapped_column(sa.String(5), index=True)
+    exists: so.Mapped[bool] = so.mapped_column()
+    consonant: so.Mapped[bool] = so.mapped_column()
+    romanized: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
+    conscript: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
+
+    def __repr__(self):
+        return 'Phoneme {}'.format(self.ipa)
+
+    def __init__(self, phoneme, ipa, exists, consonant, romanized=None, conscript=None):
+        self.phoneme = phoneme
+        self.ipa = ipa
+        self.exists = exists
+        self.consonant = consonant
+        self.romanized = romanized
+        self.conscript = conscript
+
+with app.app_context():
+    db.create_all()

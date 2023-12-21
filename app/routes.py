@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
 from app.forms import createWord, searchWord, deleteWord, ipatable
-from app.models import Lexicon
+from app.models import Lexicon, Phonology
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
@@ -89,4 +89,17 @@ def deleteword(name):
 
 @app.route('/phonology', methods=['GET', 'POST'])
 def phonology():
-    return render_template('phonology.html', form=ipatable())
+    form = ipatable()
+    if form.validate_on_submit():
+        flash('Phonology has been updated.')
+        for field in form:
+            if field.name != 'csrf_token' and field.name != 'submit':
+                match = Phonology.query.filter(Phonology.phoneme == field.name).first()
+                match.exists = field.data
+                db.session.commit()
+        return redirect(url_for('phonology'))
+    for field in form:
+        if field.name != 'csrf_token' and field.name != 'submit':
+            match = Phonology.query.filter(Phonology.phoneme == field.name).first()
+            field.data = match.exists
+    return render_template('phonology.html', form=form)
