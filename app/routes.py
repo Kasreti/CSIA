@@ -25,7 +25,7 @@ def createword():
         if form.conscript.data == '':
             conscript = cs.concreate(form.word.data)
         else:
-            conscript = form.pronunciation.data
+            conscript = form.conscript.data
         newword = Lexicon(form.word.data, pronunciation, conscript, form.definition.data,
                           selectedpos, form.inflection.data, form.wordclass.data, form.notes.data, form.etymology.data)
         db.session.add(newword)
@@ -76,7 +76,7 @@ def modifyword(name):
         if form.conscript.data == '':
             refitem.conscript = cs.concreate(refitem.word)
         else:
-            refitem.conscript = form.pronunciation.data
+            refitem.conscript = form.conscript.data
         refitem.definition = form.definition.data
         refitem.partofspeech = selectedpos
         refitem.inflection = form.inflection.data
