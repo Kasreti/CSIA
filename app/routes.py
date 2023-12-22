@@ -18,7 +18,15 @@ def createword():
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} created with definition {}.'.format(selectedpos, form.word.data, form.definition.data, form.pronunciation.data))
-        newword = Lexicon(form.word.data, form.pronunciation.data, form.conscript.data, form.definition.data,
+        if form.pronunciation.data == '':
+            pronunciation = cs.ipacreate(form.word.data)
+        else:
+            pronunciation = form.pronunciation.data
+        if form.conscript.data == '':
+            conscript = cs.concreate(form.word.data)
+        else:
+            conscript = form.pronunciation.data
+        newword = Lexicon(form.word.data, pronunciation, conscript, form.definition.data,
                           selectedpos, form.inflection.data, form.wordclass.data, form.notes.data, form.etymology.data)
         db.session.add(newword)
         db.session.commit()
