@@ -2,8 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
 from app.forms import createWord, searchWord, deleteWord, ipatable
 from app.models import Lexicon, Phonology
-import sqlalchemy as sa
-import sqlalchemy.orm as so
+import app.customscripts as cs
 
 @app.route('/')
 @app.route('/index')
@@ -62,8 +61,14 @@ def modifyword(name):
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
         refitem = Lexicon.query.get(ogid)
         refitem.word = form.word.data
-        refitem.pronunciation = form.pronunciation.data
-        refitem.conscript = form.conscript.data
+        if form.pronunciation.data == '':
+            refitem.pronunciation = cs.ipacreate(refitem.word)
+        else:
+            refitem.pronunciation = form.pronunciation.data
+        if form.conscript.data == '':
+            refitem.conscript = cs.concreate(refitem.word)
+        else:
+            refitem.conscript = form.pronunciation.data
         refitem.definition = form.definition.data
         refitem.partofspeech = selectedpos
         refitem.inflection = form.inflection.data
@@ -98,7 +103,12 @@ def phonology():
                 match = Phonology.query.filter(Phonology.phoneme == field.name).first()
                 match.exists = field.data
         for temp in exists:
-            flash(request.form.get('rom vbilnas'))
+            for key in request.form.keys():
+                for value in request.form.getlist(key):
+                    if 'rom ' + temp.phoneme == key:
+                        temp.romanized = value
+                    elif 'con ' + temp.phoneme == key:
+                        temp.conscript = value
         db.session.commit()
         return redirect(url_for('phonology'))
     for field in form:

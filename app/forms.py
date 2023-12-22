@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired, Optional
 
 class createWord(FlaskForm):
     word = StringField('Word', validators=[DataRequired()])
-    pronunciation = StringField('Pronunciation', validators=[Optional()])
-    conscript = StringField('Conscript', validators=[Optional()])
+    pronunciation = StringField('Pronunciation (leave empty to auto-generate)', validators=[Optional()])
+    conscript = StringField('Conscript (leave empty to auto-generate)', validators=[Optional()])
     definition = StringField('Definition', validators=[DataRequired()])
     notes = StringField('Notes', validators=[Optional()])
     etymology = StringField('Etymology', validators=[Optional()])
