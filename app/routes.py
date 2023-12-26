@@ -1,16 +1,18 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText
-from app.models import Lexicon, Phonology, Texts
+from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText, infForm
+from app.models import Lexicon, Phonology, Texts, VerbInflections
 import app.customscripts as cs
 from sqlalchemy.sql import collate
 import re
+
 
 @app.route('/')
 @app.route('/index')
 def index():
     user = {'username': 'miguel'}
     return render_template('index.html', title='Welcome', user=user)
+
 
 @app.route('/word/create', methods=['GET', 'POST'])
 def createword():
@@ -19,7 +21,8 @@ def createword():
     form = createWord()
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
-        flash('{} {} created with definition {}.'.format(selectedpos, form.word.data, form.definition.data, form.pronunciation.data))
+        flash('{} {} created with definition {}.'.format(selectedpos, form.word.data, form.definition.data,
+                                                         form.pronunciation.data))
         if form.pronunciation.data == '':
             pronunciation = cs.ipacreate(form.word.data)
         else:
@@ -29,11 +32,12 @@ def createword():
         else:
             conscript = form.conscript.data
         newword = Lexicon(form.word.data, pronunciation, conscript, form.definition.data,
-                          selectedpos, form.inflection.data, form.wordclass.data, form.notes.data, form.etymology.data)
+                          selectedpos, form.wordclass.data, form.notes.data, form.etymology.data, form.irregular.data)
         db.session.add(newword)
         db.session.commit()
         return redirect(url_for('word', name=form.word.data))
     return render_template('createword.html', title='Create word', form=form, pos=pos)
+
 
 @app.route('/dictionary', methods=['GET', 'POST'])
 def dictionary():
@@ -43,21 +47,37 @@ def dictionary():
         return redirect(url_for('dictresults'))
     return render_template('dictionary.html', form=form)
 
+
 @app.route('/dictionary/search', methods=['GET', 'POST'])
 def dictresults():
     substring = session['term']
-    matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(collate(Lexicon.word, 'NOCASE')).all() or
-               Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(collate(Lexicon.word, 'NOCASE')).all())
-    if substring=="":
+    matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(
+        collate(Lexicon.word, 'NOCASE')).all() or
+               Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(
+                   collate(Lexicon.word, 'NOCASE')).all())
+    if substring == "":
         stitle = "Showing all results"
     else:
         stitle = "Results for " + substring
     return render_template('dictionaryresults.html', term=substring, title=stitle, matches=matches)
 
+
 @app.route('/word/<name>', methods=['GET', 'POST'])
 def word(name):
     match = Lexicon.query.filter(Lexicon.word == name).first()
-    return render_template('word.html', word=match)
+    inf = []
+    if match.partofspeech == "Verb":
+        for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
+            inf.append(inflection)
+    if match.irregular == 1:
+        irf = []
+        if match.partofspeech == "Verb":
+            for aspect in ['Present', 'Past Perfect', 'Future', 'Future Perfect', 'Subjunctive', 'Presumptive',
+                           'Imperative']:
+                m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
+                irf.append(m2)
+    return render_template('word.html', word=match, inf=inf, irf=irf)
+
 
 @app.route('/word/<name>/edit', methods=['GET', 'POST'])
 def modifyword(name):
@@ -66,6 +86,10 @@ def modifyword(name):
     match = Lexicon.query.filter(Lexicon.word == name).first()
     ogid = match.id
     form = createWord(obj=match)
+    inf = []
+    if match.partofspeech == "Verb":
+        for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
+            inf.append(inflection)
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
@@ -84,10 +108,26 @@ def modifyword(name):
         refitem.inflection = form.inflection.data
         refitem.wordclass = form.wordclass.data
         refitem.notes = form.notes.data
+        refitem.irregular = form.irregular.data
         refitem.etymology = form.etymology.data
+        if form.irregular.data:
+            for aspect in inf:
+                m2 = VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect.aspect)).first()
+                db.session.delete(m2)
+                for key in request.form.keys():
+                    for value in request.form.getlist(key):
+                        if key == (aspect.aspect + " 1s"):
+                            fs = value
+                        elif key == (aspect.aspect + " 2s"):
+                            ss = value
+                        elif key == (aspect.aspect + " gen"):
+                            other = value
+                newaspect = VerbInflections(refitem.word + " " + aspect.aspect, 1, aspect.gloss, fs, ss, other)
+                db.session.add(newaspect)
         db.session.commit()
-        return redirect(url_for('word', name=form.word.data, word = match.word))
-    return render_template('modifyword.html', word=match, form=form, pos=pos)
+        return redirect(url_for('word', name=form.word.data, word=match.word))
+    return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf)
+
 
 @app.route('/word/<name>/delete', methods=['GET', 'POST'])
 def deleteword(name):
@@ -101,6 +141,7 @@ def deleteword(name):
         db.session.commit()
         return redirect(url_for('dictionary'))
     return render_template('deleteword.html', word=match, form=form)
+
 
 @app.route('/phonology', methods=['GET', 'POST'])
 def phonology():
@@ -127,6 +168,7 @@ def phonology():
             field.data = match.exists
     return render_template('phonology.html', form=form, exists=exists)
 
+
 @app.route('/texts', methods=['GET', 'POST'])
 def texts():
     form = searchText()
@@ -136,15 +178,17 @@ def texts():
         return redirect(url_for('textresults'))
     return render_template('texts.html', matches=matches, form=form)
 
+
 @app.route('/texts/search', methods=['GET', 'POST'])
 def textresults():
     substring = session['title']
     matches = Texts.query.filter(Texts.title.icontains(substring)).order_by(collate(Texts.title, 'NOCASE')).all()
-    if substring=="":
+    if substring == "":
         stitle = "Showing all results"
     else:
         stitle = "Results for " + substring
     return render_template('textresults.html', term=substring, title=stitle, matches=matches)
+
 
 @app.route('/texts/create', methods=['GET', 'POST'])
 def createtext():
@@ -160,10 +204,12 @@ def createtext():
         return redirect(url_for('modifytext', id=match.id))
     return render_template('createtext.html', form=form, status=status)
 
+
 @app.route('/texts/<id>/', methods=['GET', 'POST'])
 def readtext(id):
     match = Texts.query.filter(Texts.id == id).first()
     return render_template('readtext.html', match=match)
+
 
 @app.route('/texts/<id>/delete', methods=['GET', 'POST'])
 def deletetext(id):
@@ -176,6 +222,7 @@ def deletetext(id):
         return redirect(url_for('texts'))
     return render_template('deletetext.html', match=match, form=form)
 
+
 @app.route('/texts/<id>/edit', methods=['GET', 'POST'])
 def modifytext(id):
     match = Texts.query.filter(Texts.id == id).first()
@@ -183,7 +230,7 @@ def modifytext(id):
     form = modifyText(obj=match)
     splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.content)
     splits.pop()
-    if(match.translation != None):
+    if (match.translation != None):
         tsplits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
         tsplits.pop()
     else:
@@ -203,7 +250,8 @@ def modifytext(id):
         return redirect(url_for('readtext', id=match.id))
     return render_template('modifytext.html', form=form, match=match, status=status, splits=splits, tsplits=tsplits)
 
-@app.route('/checklists/<id>/edit', methods=['GET', 'POST'])
+
+@app.route('/checklist/<id>', methods=['GET', 'POST'])
 def editchecklist(id):
     match = Texts.query.filter(Texts.id == id).first()
     form = modifyText(obj=match)
@@ -225,3 +273,25 @@ def editchecklist(id):
             complete.append("No")
     return render_template('modifychecklist.html', match=match, form=form, checklist=checklist,
                            exist=exist, complete=complete)
+
+
+@app.route('/inflections', methods=['GET', 'POST'])
+def inflections():
+    form = infForm()
+    vinf = []
+    for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
+        vinf.append(inflection)
+    if form.validate_on_submit():
+        flash('Inflections have been updated.')
+        for aspect in vinf:
+            for key in request.form.keys():
+                for value in request.form.getlist(key):
+                    if key == (aspect.aspect + " 1s"):
+                        aspect.fs = value
+                    elif key == (aspect.aspect + " 2s"):
+                        aspect.ss = value
+                    elif key == (aspect.aspect + " gen"):
+                        aspect.other = value
+        db.session.commit()
+        return redirect(request.url)
+    return render_template('inflections.html', verb=vinf, form=form)

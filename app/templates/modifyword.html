@@ -56,11 +56,42 @@
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
-        <p> {{ form.inflection.label }}<br>{{ form.inflection(size=16) }}
-                {% for error in form.word.errors %}
+        <p> {{ form.irregular.label }}<br>{{ form.irregular(size=48) }}
+                {% for error in form.irregular.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
+        <p>Irregular forms</p>
+        <table>
+        <tbody>
+        <tr>
+            <td style="background-color: #c0cfe4;"></td>
+            <td style="background-color: #c0cfe4;"><b>First-Person Singular</b></td>
+            <td style="background-color: #c0cfe4;"><b>Second-Person Singular</b></td>
+            <td style="background-color: #c0cfe4;"><b>Generic</b></td>
+        </tr>
+        {% for row in inf %}
+        <tr>
+            <td style="background-color: #c0cfe4;">
+                <b>{{ row.aspect }}</b>
+            </td>
+            <td>
+                {% if word.irregular %}
+                    <input type="text" name="{{ row.aspect }} 1s" value="{{  }}">
+                {% else %}
+                    <input type="text" name="{{ row.aspect }} 1s" value="">
+                {% endif %}
+            </td>
+            <td>
+                <input type="text" name="{{ row.aspect }} 2s" value="">
+            </td>
+            <td>
+                <input type="text" name="{{ row.aspect }} gen" value="">
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
         <p> {{ form.notes.label }}<br>{{ form.notes(size=48) }}
                 {% for error in form.word.errors %}
                     <span style="color: red;">[{{ error }}]</span>

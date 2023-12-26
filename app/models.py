@@ -19,14 +19,13 @@ class Lexicon(db.Model):
     def __repr__(self):
         return 'Word {} with definition {}'.format(self.word, self.definition)
 
-    def __init__(self, word, pronunciation, conscript, definition, partofspeech, infclass, wordclass, notes, etymology, irregular):
+    def __init__(self, word, pronunciation, conscript, definition, partofspeech, wordclass, notes, etymology, irregular):
         self.word = word
         self.pronunciation = pronunciation
         self.conscript = conscript
         self.wordclass = wordclass
         self.definition = definition
         self.notes = notes
-        self.infclass = infclass
         self.etymology = etymology
         self.partofspeech = partofspeech
         self.irregular = irregular
@@ -66,6 +65,25 @@ class Texts(db.Model):
         self.title = title
         self.status = status
         self.content = content
+
+class VerbInflections(db.Model):
+    __tablename__ = 'Verb Inflections'
+    aspect: so.Mapped[str] = so.mapped_column(primary_key=True)
+    irregular: so.Mapped[bool] = so.mapped_column()
+    gloss: so.Mapped[str] = so.mapped_column()
+    fs: so.Mapped[str] = so.mapped_column()
+    ss: so.Mapped[str] = so.mapped_column()
+    other: so.Mapped[str] = so.mapped_column()
+    def __repr__(self):
+        return 'Verb conjugation for aspect {}'.format(self.aspect)
+
+    def __init__(self, aspect, irregular, gloss, fs, ss, other):
+        self.aspect = aspect
+        self.irregular = irregular
+        self.gloss = gloss
+        self.fs = fs
+        self.ss = ss
+        self.other = other
 
 with app.app_context():
     db.create_all()

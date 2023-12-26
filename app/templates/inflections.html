@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inflection manager</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<h1>Verb inflections</h1>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <h3> {{ form.submit(class_="grb gena") }} </h3>
+    <table>
+        <tbody>
+        <tr>
+            <td></td>
+            <td><b>First-Person Singular</b></td>
+            <td><b>Second-Person Singular</b></td>
+            <td><b>Generic</b></td>
+        </tr>
+        {% for row in verb %}
+        <tr>
+            <td>
+                <b>{{ row.aspect }}</b>
+            </td>
+            <td>
+                <input type="text" name="{{ row.aspect }} 1s" value="{{ row.fs }}">
+            </td>
+            <td>
+                <input type="text" name="{{ row.aspect }} 2s" value="{{ row.ss }}">
+            </td>
+            <td>
+                <input type="text" name="{{ row.aspect }} gen" value="{{ row.other }}">
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}
+</body>
+</html>

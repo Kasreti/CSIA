@@ -11,6 +11,7 @@ class createWord(FlaskForm):
     etymology = StringField('Etymology', validators=[Optional()])
     wordclass = IntegerField('Word class', validators=[Optional()])
     inflection = StringField('Inflection', validators=[Optional()])
+    irregular = BooleanField('Irregular', validators=[Optional()])
     csubmit = SubmitField('Create')
     esubmit = SubmitField('Save')
 
@@ -164,3 +165,6 @@ class modifyText(FlaskForm):
 class searchText(FlaskForm):
     title = StringField('Search by text:')
     submit = SubmitField('Search')
+
+class infForm(FlaskForm):
+    submit = SubmitField('Save verb inflections')

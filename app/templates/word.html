@@ -10,14 +10,62 @@
         <wordh1>{{ word.word }}</wordh1>
         <a href="{{ url_for('modifyword', name=word.word) }}">[edit]</a>
         <a href="{{ url_for('deleteword', name=word.word) }}">[delete]</a><hr>
-        <wordh2>Etymology</wordh2><br>
-        <wordp>{{ word.etymology }}</wordp><br><br>
+        {% if word.etymology != "" %}
+            <wordh2>Etymology</wordh2><br>
+            <wordp>{{ word.etymology }}</wordp><br><br>
+        {% endif %}
         <wordh2>Pronunciation</wordh2><br>
         <wordp>IPA: /{{ word.pronunciation }}/<br>Orthography: {{ word.conscript }}</wordp><br><br>
-        <wordh2>{{ word.partofspeech }}</wordh2><br>
+        <wordh2>{{ word.partofspeech }}
+        {% if word.irregular %}
+         (irregular)
+        {% endif %}</wordh2><br>
         <wordp>{{ word.definition }}</wordp><br><br>
-        <wordh2>Notes</wordh2><br>
-        <wordp>{{ word.notes }}</wordp>
+        {% if word.notes != "" %}
+            <wordh2>Notes</wordh2><br>
+            <wordp>{{ word.notes }}</wordp>
+        {% endif %}
+        {% if word.partofspeech == "Verb" %}
+        <wordh2>Inflections</wordh2>
+        <table class="inftable">
+        <tbody>
+        <tr>
+            <td style="background-color: #c0cfe4;"></td>
+            <td style="background-color: #c0cfe4;"><b>First-Person Singular</b></td>
+            <td style="background-color: #c0cfe4;"><b>Second-Person Singular</b></td>
+            <td style="background-color: #c0cfe4;"><b>Generic</b></td>
+        </tr>
+        {% for row in inf %}
+        <tr>
+            <td style="background-color: #c0cfe4;">
+                <b>{{ row.aspect }}</b>
+            </td>
+            <td>
+                {% if irf[inf.index(row)].fs != "" %}
+                    {{ irf[inf.index(row)].fs }}
+                {% else %}
+                    {{ word.word }}{{ row.fs }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[inf.index(row)].ss != "" %}
+                    {{ irf[inf.index(row)].ss }}
+                {% else %}
+                    {{ word.word }}{{ row.ss }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[inf.index(row)].other != ""  %}
+                    {{ irf[inf.index(row)].other }}
+                {% else %}
+                    {{ word.word }}{{ row.other }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
         {% endblock %}
     </body>
 </html>
