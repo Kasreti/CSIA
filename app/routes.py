@@ -90,6 +90,13 @@ def modifyword(name):
     if match.partofspeech == "Verb":
         for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
             inf.append(inflection)
+    if match.irregular == 1:
+        irf = []
+        if match.partofspeech == "Verb":
+            for aspect in ['Present', 'Past Perfect', 'Future', 'Future Perfect', 'Subjunctive', 'Presumptive',
+                           'Imperative']:
+                m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
+                irf.append(m2)
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
@@ -126,7 +133,7 @@ def modifyword(name):
                 db.session.add(newaspect)
         db.session.commit()
         return redirect(url_for('word', name=form.word.data, word=match.word))
-    return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf)
+    return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf, irf=irf)
 
 
 @app.route('/word/<name>/delete', methods=['GET', 'POST'])

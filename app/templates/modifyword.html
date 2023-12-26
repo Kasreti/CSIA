@@ -77,16 +77,24 @@
             </td>
             <td>
                 {% if word.irregular %}
-                    <input type="text" name="{{ row.aspect }} 1s" value="{{  }}">
+                    <input type="text" name="{{ row.aspect }} 1s" value="{{ irf[inf.index(row)].fs }}">
                 {% else %}
                     <input type="text" name="{{ row.aspect }} 1s" value="">
                 {% endif %}
             </td>
             <td>
-                <input type="text" name="{{ row.aspect }} 2s" value="">
+                {% if word.irregular %}
+                    <input type="text" name="{{ row.aspect }} 2s" value="{{ irf[inf.index(row)].ss }}">
+                {% else %}
+                    <input type="text" name="{{ row.aspect }} 2s" value="">
+                {% endif %}
             </td>
             <td>
-                <input type="text" name="{{ row.aspect }} gen" value="">
+                {% if word.irregular %}
+                    <input type="text" name="{{ row.aspect }} gen" value="{{ irf[inf.index(row)].other }}">
+                {% else %}
+                    <input type="text" name="{{ row.aspect }} gen" value="">
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
