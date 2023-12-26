@@ -11,7 +11,7 @@
         <a href="{{ url_for('phonology') }}">Phonology</a>
         <a href="{{ url_for('index') }}">Home</a>
         <a href="#">Inflections</a>
-        <a href="#">Texts</a>
+        <a href="{{ url_for('texts') }}">Texts</a>
 </div>
 <hr>
         {% with messages = get_flashed_messages() %}

@@ -10,7 +10,7 @@ class Lexicon(db.Model):
     pronunciation: so.Mapped[str] = so.mapped_column(sa.String(50), nullable=True)
     conscript: so.Mapped[str] = so.mapped_column(sa.String(50), nullable=True)
     definition: so.Mapped[str] = so.mapped_column(sa.String(255), index=True)
-    partofspeech: so.Mapped[str] = so.mapped_column(sa.String(1), nullable=True)
+    partofspeech: so.Mapped[str] = so.mapped_column(nullable=True)
     infclass: so.Mapped[str] = so.mapped_column(sa.String(10), nullable=True)
     wordclass: so.Mapped[int] = so.mapped_column(sa.String(1), nullable=True)
     notes: so.Mapped[str] = so.mapped_column(nullable=True)
@@ -48,6 +48,22 @@ class Phonology(db.Model):
         self.consonant = consonant
         self.romanized = romanized
         self.conscript = conscript
+
+class Texts(db.Model):
+    __tablename__ = 'Texts'
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    title: so.Mapped[str] = so.mapped_column(index=True)
+    status: so.Mapped[str] = so.mapped_column(index=True)
+    content: so.Mapped[str] = so.mapped_column()
+    translation: so.Mapped[str] = so.mapped_column(nullable=True)
+
+    def __repr__(self):
+        return 'Translatable text {} with status {}'.format(self.id, self.status)
+
+    def __init__(self, title, status, content):
+        self.title = title
+        self.status = status
+        self.content = content
 
 with app.app_context():
     db.create_all()

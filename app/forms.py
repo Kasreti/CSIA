@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, BooleanField
+from wtforms import StringField, SubmitField, IntegerField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Optional
 
 class createWord(FlaskForm):
@@ -134,3 +134,18 @@ class ipatable(FlaskForm):
     opbr = BooleanField()
     # END
     submit = SubmitField('Save')
+
+class createText(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Text content', validators=[DataRequired()])
+    submit = SubmitField('Create')
+
+class modifyText(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Original content', validators=[DataRequired()])
+    translation = TextAreaField('Translation')
+    submit = SubmitField('Create')
+
+class searchText(FlaskForm):
+    title = StringField('Search by text:')
+    submit = SubmitField('Search')

@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord, searchWord, deleteWord, ipatable
-from app.models import Lexicon, Phonology
+from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText
+from app.models import Lexicon, Phonology, Texts
 import app.customscripts as cs
+from sqlalchemy.sql import collate
 
 @app.route('/')
 @app.route('/index')
@@ -41,11 +42,11 @@ def dictionary():
         return redirect(url_for('dictresults'))
     return render_template('dictionary.html', form=form)
 
-@app.route('/dictresults', methods=['GET', 'POST'])
+@app.route('/dictionary/search', methods=['GET', 'POST'])
 def dictresults():
     substring = session['term']
-    matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(Lexicon.word).all() or
-               Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(Lexicon.word).all())
+    matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(collate(Lexicon.word, 'NOCASE')).all() or
+               Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(collate(Lexicon.word, 'NOCASE')).all())
     if substring=="":
         stitle = "Showing all results"
     else:
@@ -124,3 +125,40 @@ def phonology():
             match = Phonology.query.filter(Phonology.phoneme == field.name).first()
             field.data = match.exists
     return render_template('phonology.html', form=form, exists=exists)
+
+@app.route('/texts', methods=['GET', 'POST'])
+def texts():
+    form = searchText()
+    matches = Texts.query.order_by(collate(Texts.title, 'NOCASE')).all()
+    if form.validate_on_submit():
+        session['title'] = form.title.data
+        return redirect(url_for('textresults'))
+    return render_template('texts.html', matches=matches, form=form)
+
+@app.route('/texts/search', methods=['GET', 'POST'])
+def textresults():
+    substring = session['title']
+    matches = Texts.query.filter(Texts.title.icontains(substring)).order_by(collate(Texts.title, 'NOCASE')).all()
+    if substring=="":
+        stitle = "Showing all results"
+    else:
+        stitle = "Results for " + substring
+    return render_template('textresults.html', term=substring, title=stitle, matches=matches)
+
+@app.route('/texts/create', methods=['GET', 'POST'])
+def createtext():
+    status = ['Complete', 'Work in Progress', 'Incomplete']
+    form = createText()
+    if form.validate_on_submit():
+        nstatus = request.form.get('status')
+        created = Texts(form.title.data, nstatus, form.content.data)
+        flash('Translatable text {} with status {} created.'.format(created.title, created.status))
+        db.session.add(created)
+        db.session.commit()
+        return render_template('textresults.html')
+    return render_template('createtext.html', form=form, status=status)
+
+@app.route('/texts/<id>/', methods=['GET', 'POST'])
+def readtext(id):
+    match = Texts.query.filter(Texts.id == id)
+    return render_template('createtext.html', match=match)

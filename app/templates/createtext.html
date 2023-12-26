@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Import text</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+    <h1>Import text</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+            <h2>
+                {{ form.title.label }}<br>{{ form.title(size=100) }}
+                {% for error in form.title.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </h2>
+            <p>Status<br>
+                <select name="status">
+                    {% for n in status %}
+                        <option value="{{n}}" SELECTED>{{ n }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p> {{ form.content.label }}<br>{{ form.content(style="height: 500px; width: 80%; word-wrap: break-word; word-break: break-all;") }}
+                {% for error in form.content.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+        <p> {{ form.submit(class_="grb") }} </p>
+    </form>
+{% endblock %}
+</body>
+</html>
