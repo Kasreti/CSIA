@@ -4,6 +4,7 @@ from app.forms import createWord, searchWord, deleteWord, ipatable, createText, 
 from app.models import Lexicon, Phonology, Texts
 import app.customscripts as cs
 from sqlalchemy.sql import collate
+import re
 
 @app.route('/')
 @app.route('/index')
@@ -160,5 +161,24 @@ def createtext():
 
 @app.route('/texts/<id>/', methods=['GET', 'POST'])
 def readtext(id):
-    match = Texts.query.filter(Texts.id == id)
-    return render_template('createtext.html', match=match)
+    match = Texts.query.filter(Texts.id == id).first()
+    return render_template('readtext.html', match=match)
+
+@app.route('/texts/<id>/delete', methods=['GET', 'POST'])
+def deletetext(id):
+    match = Texts.query.filter(Texts.id == id).first()
+    form = deleteWord()
+    if form.validate_on_submit():
+        flash('{} has been deleted.'.format(match.title))
+        Texts.query.filter(Texts.id == match.id).delete()
+        db.session.commit()
+        return redirect(url_for('texts'))
+    return render_template('deletetext.html', match=match, form=form)
+
+@app.route('/texts/<id>/edit', methods=['GET', 'POST'])
+def createtext(id):
+    match = Texts.query.filter(Texts.id == id).first()
+    status = ['Complete', 'Work in Progress', 'Incomplete']
+    form = createText()
+    splits = re.split(r".|,|:|;", match.content)
+    return render_template('edittext.html', form=form, status=status, splits=splits)

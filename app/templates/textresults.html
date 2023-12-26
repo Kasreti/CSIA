@@ -11,7 +11,7 @@
         <h3 style="text-align:center, margin:auto"><a href="{{ url_for('texts') }}">⋘ Return to search page</a></h3>
         <hr>
         {% for match in matches %}
-        <a href="{{ url_for('index') }}"><h2>{{ match.title }}</h2></a><lightp>  Progress: {{ match.status }}</lightp>
+        <a href="{{ url_for('readtext', id=match.id) }}"><h2>{{ match.title }}</h2></a><lightp>  Progress: {{ match.status }}</lightp>
         {% endfor %}
         {% endblock %}
     </body>

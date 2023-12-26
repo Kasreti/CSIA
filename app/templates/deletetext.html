@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Delete {{ word.word }}</title>
+    <title>Delete {{ match.title }}</title>
 </head>
 <body>
 {% extends "base.html" %}
 {% block content %}
-    <rh1>Are you sure you want to delete {{ word.word }}?</rh1><br>
+    <rh1>Are you sure you want to delete {{ match.title }}?</rh1><br>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <h3> {{ form.submit(class_="grb red") }}
-        <a href="{{ url_for('word', name=word.word) }}"><button type="button" class="grb gena">Cancel</button></h2></a></h3>
+        <a href="{{ url_for('readtext', id=match.id) }}"><button type="button" class="grb gena">Cancel</button></h2></a></h3>
     </form>
 
 {% endblock %}

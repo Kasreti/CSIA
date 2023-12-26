@@ -21,6 +21,7 @@
             <td>Dental</td>
             <td>Alveolar</td>
             <td>Post-alveolar</td>
+            <td>Retroflex</td>
             <td>Palatal</td>
             <td>Velar</td>
             <td>Glottal</td>
@@ -38,6 +39,10 @@
             <td colspan="3">
                 <div class="ipa-button"><label>{{ form.nalvnas(size=16, class_="grb") }}<span>n̥</span></label>
                     <br><label>{{ form.valvnas(size=16, class_="grb") }}<span>n</span></label></div>
+            </td>
+            <td>
+                <div class="ipa-button"><label>{{ form.nretnas(size=16, class_="grb") }}<span>ɳ̊</span></label>
+                    <br><label>{{ form.vretnas(size=16, class_="grb") }}<span>ɳ</span></label></div>
             </td>
             <td>
                 <div class="ipa-button"><label>{{ form.npalnas(size=16, class_="grb") }}<span>ɲ̊</span></label>
@@ -67,6 +72,10 @@
                     <br><label>{{ form.valvplo(size=16, class_="grb") }}<span>d</span></label></div>
             </td>
             <td>
+                <div class="ipa-button"><label>{{ form.nretplo(size=16, class_="grb") }}<span>ʈ</span></label>
+                    <br><label>{{ form.vretplo(size=16, class_="grb") }}<span>ɖ</span></label></div>
+            </td>
+            <td>
                 <div class="ipa-button"><label>{{ form.npalplo(size=16, class_="grb") }}<span>c</span></label>
                     <br><label>{{ form.vpalplo(size=16, class_="grb") }}<span>ɟ</span></label></div>
             </td>
@@ -80,7 +89,7 @@
         </tr>
         <tr>
             <td>Sibilant affricate</td>
-            <td colspan="3" class="graybg"></td>
+            <td colspan="2" class="graybg"></td>
             <td colspan="2">
                 <div class="ipa-button"><label>{{ form.nalvsaf(size=16, class_="grb") }}<span>ts</span></label>
                     <br><label>{{ form.valvsaf(size=16, class_="grb") }}<span>dz</span></label></div>
@@ -90,6 +99,10 @@
                     <br><label>{{ form.vpavsaf(size=16, class_="grb") }}<span>dʒ</span></label></div>
             </td>
             <td>
+                <div class="ipa-button"><label>{{ form.nretsaf(size=16, class_="grb") }}<span>tʂ</span></label>
+                    <br><label>{{ form.vretsaf(size=16, class_="grb") }}<span>dʐ</span></label></div>
+            </td>
+            <td>
                 <div class="ipa-button"><label>{{ form.npalsaf(size=16, class_="grb") }}<span>tɕ</span></label>
                     <br><label>{{ form.vpalsaf(size=16, class_="grb") }}<span>dʑ</span></label></div>
             </td>
@@ -97,7 +110,7 @@
         </tr>
         <tr>
             <td>Sibilant fricative</td>
-            <td colspan="3" class="graybg"></td>
+            <td colspan="2" class="graybg"></td>
             <td colspan="2">
                 <div class="ipa-button"><label>{{ form.nalvsif(size=16, class_="grb") }}<span>s</span></label>
                     <br><label>{{ form.valvsif(size=16, class_="grb") }}<span>z</span></label></div>
@@ -105,6 +118,10 @@
             <td>
                 <div class="ipa-button"><label>{{ form.npavsif(size=16, class_="grb") }}<span>ʃ</span></label>
                     <br><label>{{ form.vpavsif(size=16, class_="grb") }}<span>ʒ</span></label></div>
+            </td>
+            <td>
+                <div class="ipa-button"><label>{{ form.nretsif(size=16, class_="grb") }}<span>ʂ</span></label>
+                    <br><label>{{ form.vretsif(size=16, class_="grb") }}<span>ʐ</span></label></div>
             </td>
             <td>
                 <div class="ipa-button"><label>{{ form.npalsif(size=16, class_="grb") }}<span>ɕ</span></label>
@@ -135,6 +152,10 @@
                     <br><label>{{ form.vposnsf(size=16, class_="grb") }}<span>ɹ̠˔</span></label></div>
             </td>
             <td>
+                <div class="ipa-button"><label>{{ form.nretnsf(size=16, class_="grb") }}<span>ɻ̊˔</span></label>
+                    <br><label>{{ form.vretnsf(size=16, class_="grb") }}<span>ɻ˔</span></label></div>
+            </td>
+            <td>
                 <div class="ipa-button"><label>{{ form.npalnsf(size=16, class_="grb") }}<span>ç</span></label>
                     <br><label>{{ form.vpalnsf(size=16, class_="grb") }}<span>ʝ</span></label></div>
             </td>
@@ -155,6 +176,9 @@
             </td>
             <td colspan="3">
                 <div class="ipa-button"><label>{{ form.valvapr(size=16, class_="grb") }}<span>ɹ</span></label></div>
+            </td>
+            <td>
+                <div class="ipa-button"><label>{{ form.vretapr(size=16, class_="grb") }}<span>ɻ</span></label></div>
             </td>
             <td>
                 <div class="ipa-button"><label>{{ form.vpalapr(size=16, class_="grb") }}<span>j</span></label></div>
@@ -178,6 +202,10 @@
                 <div class="ipa-button"><label>{{ form.nalvtap(size=16, class_="grb") }}<span>ɾ̥</span></label>
                     <br><label>{{ form.valvtap(size=16, class_="grb") }}<span>ɾ</span></label></div>
             </td>
+            <td>
+                <div class="ipa-button"><label>{{ form.nrettap(size=16, class_="grb") }}<span>ɽ̊</span></label>
+                    <br><label>{{ form.vrettap(size=16, class_="grb") }}<span>ɽ</span></label></div>
+            </td>
             <td colspan="3" class="graybg"></td>
         </tr>
         <tr>
@@ -191,6 +219,10 @@
                 <div class="ipa-button"><label>{{ form.nalvtri(size=16, class_="grb") }}<span>r̥</span></label>
                     <br><label>{{ form.valvtri(size=16, class_="grb") }}<span>r</span></label></div>
             </td>
+             <td>
+                <div class="ipa-button"><label>{{ form.nrettri(size=16, class_="grb") }}<span>ɽ̊r̥</span></label>
+                    <br><label>{{ form.vrettri(size=16, class_="grb") }}<span>ɽr</span></label></div>
+            </td>
             <td colspan="3" class="graybg"></td>
         </tr>
         <tr>
@@ -198,6 +230,9 @@
             <td colspan="2" class="graybg"></td>
             <td colspan="3">
                 <div class="ipa-button"><label>{{ form.valvlap(size=16, class_="grb") }}<span>l</span></label></div>
+            </td>
+            <td>
+                <div class="ipa-button"><label>{{ form.vretlap(size=16, class_="grb") }}<span>ɭ</span></label></div>
             </td>
             <td>
                 <div class="ipa-button"><label>{{ form.vpallap(size=16, class_="grb") }}<span>ʎ</span></label></div>

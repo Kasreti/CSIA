@@ -15,10 +15,11 @@ class Lexicon(db.Model):
     wordclass: so.Mapped[int] = so.mapped_column(sa.String(1), nullable=True)
     notes: so.Mapped[str] = so.mapped_column(nullable=True)
     etymology: so.Mapped[str] = so.mapped_column(nullable=True)
+    irregular: so.Mapped[bool] = so.mapped_column()
     def __repr__(self):
         return 'Word {} with definition {}'.format(self.word, self.definition)
 
-    def __init__(self, word, pronunciation, conscript, definition, partofspeech, infclass, wordclass, notes, etymology):
+    def __init__(self, word, pronunciation, conscript, definition, partofspeech, infclass, wordclass, notes, etymology, irregular):
         self.word = word
         self.pronunciation = pronunciation
         self.conscript = conscript
@@ -28,6 +29,7 @@ class Lexicon(db.Model):
         self.infclass = infclass
         self.etymology = etymology
         self.partofspeech = partofspeech
+        self.irregular = irregular
 
 class Phonology(db.Model):
     __tablename__ = 'Phonology'
