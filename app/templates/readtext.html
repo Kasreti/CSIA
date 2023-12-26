@@ -8,7 +8,7 @@
         {% extends "base.html" %}
         {% block content %}<br>
         <wordh1>{{ match.title }}</wordh1>
-        <a href="{{ url_for('index') }}">[edit]</a>
+        <a href="{{ url_for('modifytext', id=match.id) }}">[edit]</a>
         <a href="{{ url_for('deletetext', id=match.id) }}">[delete]</a><hr>
         <wordh2>Progress: </wordh2><wordp>{{ match.status }}</wordp><br><br>
         <wordh2>Original text</wordh2><br><wordp>{{ match.content }}</wordp><br><br>

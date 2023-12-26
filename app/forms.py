@@ -159,8 +159,7 @@ class createText(FlaskForm):
 class modifyText(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Original content', validators=[DataRequired()])
-    translation = TextAreaField('Translation')
-    submit = SubmitField('Create')
+    submit = SubmitField('Save translation')
 
 class searchText(FlaskForm):
     title = StringField('Search by text:')

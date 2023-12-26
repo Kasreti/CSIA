@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Import text</title>
+    <title>Translate {{ match.title }}</title>
 </head>
 <body>
 {% extends "base.html" %}
 {% block content %}
-    <h1>Import text</h1>
+    <h1>Translate text</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
@@ -24,12 +24,11 @@
                     {% endfor %}
                 </select>
             </p>
-            <p> {{ form.content.label }}<br>{{ form.content(style="height: 500px; width: 80%; word-wrap: break-word; word-break: break-all;") }}
-                {% for error in form.content.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-        <p> {{ form.submit(class_="grb gena") }} </p>
+            <p> {{ form.submit(class_="grb gena") }} </p>
+            {% for portion in splits %}
+            <h2s>{{ portion }}</h2s><br>
+            <p><input type="text" name="translated" value="{{ tsplits[splits.index(portion)] }} "><br></p>
+            {% endfor %}
     </form>
 {% endblock %}
 </body>

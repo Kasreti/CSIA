@@ -70,6 +70,16 @@ h2 {
   margin-right: 10%;
 }
 
+h2s {
+  color: black;
+  font-family: "Lora", sans-serif;
+  font-size: 16pt;
+  text-align: left;
+  font-weight: 700;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 p2 {
   color: black;
   font-family: "Lora", serif;

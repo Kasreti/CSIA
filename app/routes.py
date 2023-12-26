@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText
+from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText
 from app.models import Lexicon, Phonology, Texts
 import app.customscripts as cs
 from sqlalchemy.sql import collate
@@ -12,7 +12,7 @@ def index():
     user = {'username': 'miguel'}
     return render_template('index.html', title='Welcome', user=user)
 
-@app.route('/createword', methods=['GET', 'POST'])
+@app.route('/word/create', methods=['GET', 'POST'])
 def createword():
     pos = ['Adjective', 'Adverb', 'Conjunction', 'Demonstrative', 'Interrogative', 'Noun', 'Numeral', 'Pronoun',
            'Proper noun', 'Verb']
@@ -156,7 +156,8 @@ def createtext():
         flash('Translatable text {} with status {} created.'.format(created.title, created.status))
         db.session.add(created)
         db.session.commit()
-        return render_template('textresults.html')
+        match = Texts.query.filter(Texts.title == form.title.data).first()
+        return redirect(url_for('modifytext', id=match.id))
     return render_template('createtext.html', form=form, status=status)
 
 @app.route('/texts/<id>/', methods=['GET', 'POST'])
@@ -176,9 +177,25 @@ def deletetext(id):
     return render_template('deletetext.html', match=match, form=form)
 
 @app.route('/texts/<id>/edit', methods=['GET', 'POST'])
-def createtext(id):
+def modifytext(id):
     match = Texts.query.filter(Texts.id == id).first()
     status = ['Complete', 'Work in Progress', 'Incomplete']
-    form = createText()
-    splits = re.split(r".|,|:|;", match.content)
-    return render_template('edittext.html', form=form, status=status, splits=splits)
+    form = modifyText(obj=match)
+    splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.content)
+    splits.pop()
+    tsplits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
+    tsplits.pop()
+    if form.validate_on_submit():
+        flash('Translation has been updated.')
+        newtrans = ""
+        for key in request.form.keys():
+            for value in request.form.getlist(key):
+                if key == "translated":
+                    newtrans = newtrans + value + ' '
+        match.status = request.form.get('status')
+        match.title = form.title.data
+        match.content = form.content.data
+        match.translation = newtrans
+        db.session.commit()
+        return redirect(url_for('readtext', id=match.id))
+    return render_template('modifytext.html', form=form, match=match, status=status, splits=splits, tsplits=tsplits)
