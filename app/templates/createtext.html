@@ -24,7 +24,10 @@
                     {% endfor %}
                 </select>
             </p>
-            <p> {{ form.content.label }}<br>{{ form.content(style="height: 500px; width: 80%; word-wrap: break-word; word-break: break-all;") }}
+            <p> {{ form.content.label }}<br>
+            <subp><em>For checklists, please separate each entry with a comma.</em></subp>
+                <br>
+                {{ form.content(style="height: 500px; width: 80%; word-wrap: break-word; word-break: break-all;") }}
                 {% for error in form.content.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}

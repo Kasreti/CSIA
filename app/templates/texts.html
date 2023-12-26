@@ -7,11 +7,11 @@
     <body>
         {% extends "base.html" %}
         {% block content %}
-        <h1>Translatable texts</h1>
+        <h1>Translatable texts and checklists</h1>
         <form action="" method="post" novalidate style="text-align:center, margin:auto">
             {{ form.hidden_tag() }}
              <h3> {{ form.title.label }}<br>{{ form.title(size=32) }} {{ form.submit(class_="grb") }}
-                 <a href="{{ url_for('createtext') }}"><button type="button" class="grb">Create text</button> </a></h3>
+                 <a href="{{ url_for('createtext') }}"><button type="button" class="grb">Create text/checklist</button> </a></h3>
              <h4>Leave search bar empty to show all results.</h4>
          </form>
         {% endblock %}

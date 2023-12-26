@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Using {{ match.title }} checklist</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<h1>Translate text</h1>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <h2>
+        {{ form.title.label }}<br>{{ form.title(size=100) }}
+        {% for error in form.title.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </h2>
+    <subp style="margin-left: 10%;"><em>Please separate each entry with a comma.</em></subp>
+    <br>
+    {{ form.content(style="height: 100px; width: 80%; word-wrap: break-word; word-break: break-all; margin-left: 10%;") }}
+    {% for error in form.content.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+    </p>
+    <p> {{ form.submit(class_="grb gena") }} </p>
+
+    <table>
+        <tbody>
+        <tr>
+            <td><b>English</b></td>
+            <td><b>Dukhrit</b></td>
+            <td><b>Completed</b></td>
+        </tr>
+        {% for word in checklist %}
+        <tr>
+            <td>
+                {{ word }}
+            </td>
+            <td>
+                <a href="{{ url_for('word', name=word) }}">{{ exist[checklist.index(word)] }}</a>
+            </td>
+            <td>
+                {{ complete[checklist.index(word)] }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+{% endblock %}
+</body>
+</html>

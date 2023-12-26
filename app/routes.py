@@ -148,7 +148,7 @@ def textresults():
 
 @app.route('/texts/create', methods=['GET', 'POST'])
 def createtext():
-    status = ['Complete', 'Work in Progress', 'Incomplete']
+    status = ['Complete', 'Work in Progress', 'Incomplete', 'Checklist']
     form = createText()
     if form.validate_on_submit():
         nstatus = request.form.get('status')
@@ -183,8 +183,11 @@ def modifytext(id):
     form = modifyText(obj=match)
     splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.content)
     splits.pop()
-    tsplits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
-    tsplits.pop()
+    if(match.translation != None):
+        tsplits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
+        tsplits.pop()
+    else:
+        tsplits = [''] * len(splits)
     if form.validate_on_submit():
         flash('Translation has been updated.')
         newtrans = ""
@@ -199,3 +202,26 @@ def modifytext(id):
         db.session.commit()
         return redirect(url_for('readtext', id=match.id))
     return render_template('modifytext.html', form=form, match=match, status=status, splits=splits, tsplits=tsplits)
+
+@app.route('/checklists/<id>/edit', methods=['GET', 'POST'])
+def editchecklist(id):
+    match = Texts.query.filter(Texts.id == id).first()
+    form = modifyText(obj=match)
+    checklist = match.content.split(", ")
+    exist = []
+    complete = []
+    if form.validate_on_submit():
+        flash('Checklist has been updated.')
+        match.title = form.title.data
+        match.content = form.content.data
+        return redirect(request.url)
+    for entry in checklist:
+        m2 = Lexicon.query.filter(Lexicon.definition.icontains(entry)).order_by(collate(Lexicon.word, 'NOCASE')).first()
+        if m2 is not None:
+            exist.append(m2.word)
+            complete.append("Yes")
+        else:
+            exist.append("")
+            complete.append("No")
+    return render_template('modifychecklist.html', match=match, form=form, checklist=checklist,
+                           exist=exist, complete=complete)

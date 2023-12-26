@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Editing {{ word }}</title>
+    <title>Editing {{ word.word }}</title>
 </head>
 <body>
 {% extends "base.html" %}
@@ -43,7 +43,11 @@
                 Part of speech<br>
                 <select name="posselect">
                     {% for n in pos %}
-                        <option value="{{n}}" SELECTED>{{ n }}</option>
+                        {% if n == word.partofspeech %}
+                            <option value="{{n}}" SELECTED>{{ n }}</option>
+                        {% else %}
+                            <option value="{{n}}">{{ n }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </p>

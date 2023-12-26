@@ -10,8 +10,8 @@
     <rh1>Are you sure you want to delete {{ word.word }}?</rh1><br>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <h3> {{ form.submit(class_="grb red") }}</h3>
-        <a href="{{ url_for('word', name=word.word) }}"><button type="button" class="grb gena">Cancel</button></h2></a>
+        <h3> {{ form.submit(class_="grb red") }}
+        <a href="{{ url_for('word', name=word.word) }}"><button type="button" class="grb gena">Cancel</button></h2></a></h3>
     </form>
 
 {% endblock %}

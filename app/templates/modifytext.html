@@ -20,7 +20,11 @@
             <p>Status<br>
                 <select name="status">
                     {% for n in status %}
-                        <option value="{{n}}" SELECTED>{{ n }}</option>
+                        {% if n == match.status %}
+                            <option value="{{n}}" SELECTED>{{ n }}</option>
+                        {% else %}
+                            <option value="{{n}}">{{ n }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </p>
