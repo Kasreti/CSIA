@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automatic gloss generator</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+    <wordh1>Glossed text</wordh1><br><hr>
+    {% for portion in splits %}
+            <wordh2>{{ portion }}</wordh2><br>
+            <wordp>{{ tsplits[splits.index(portion)] }}</wordp><br>
+    {% endfor %}
+{% endblock %}
+</body>
+</html>

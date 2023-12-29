@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dictionary - {{ term }}</title>
+    <title>Text database</title>
     </head>
     <body>
         {% extends "base.html" %}
@@ -14,6 +14,8 @@
                  <a href="{{ url_for('createtext') }}"><button type="button" class="grb">Create text/checklist</button> </a></h3>
              <h4>Leave search bar empty to show all results.</h4>
          </form>
+        <h1>Use auto-gloss generator:<br>
+            <a href="{{ url_for('glosshome') }}"><button type="button" class="grb gena">Use automatic gloss generator</button> </a></h1>
         {% endblock %}
     </body>
 </html>

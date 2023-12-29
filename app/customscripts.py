@@ -75,19 +75,20 @@ def gloss(sen):
     revin = VerbInflections.query.filter(VerbInflections.irregular == 0).all()
     irvin = VerbInflections.query.filter(VerbInflections.irregular == 1).all()
     for iw, word in enumerate(sen):
+        word = re.sub(r"[,.!?]", '', word)
         for sec in words:
             if sec.word.casefold() in word.casefold():
-                word = re.sub(sec.word, "", word, re.IGNORECASE)
-                trans[iw] = re.sub(sec.word, sec.definition.replace(" ", "_"), trans[iw], re.IGNORECASE)
+                trans[iw] = trans[iw].casefold().replace(sec.word.casefold(), sec.definition.replace(" ", "_"))
+                word = word.casefold().replace(sec.word.casefold(), "")
                 if sec.partofspeech == "Verb" and word != "":
                     for asp in revin:
-                        if word.find(asp.fs) != 1:
+                        if word.endswith(asp.fs):
                             word.replace(asp.fs, "!")
                             trans[iw] = trans[iw].replace(asp.fs, "-" + asp.gloss + ".1S")
-                        elif word.find(asp.ss) != 1:
+                        elif word.endswith(asp.ss):
                             word.replace(asp.ss, "!")
                             trans[iw] = trans[iw].replace(asp.ss, "-" + asp.gloss + ".2S")
-                        elif word.find(asp.other) != 1:
+                        elif word.endswith(asp.other):
                             word.replace(asp.other, "!")
                             trans[iw] = trans[iw].replace(asp.other, "-" + asp.gloss + ".NSP")
         for irr in irvin:
@@ -106,4 +107,14 @@ def gloss(sen):
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
                 trans[iw] = orig.definition.replace(" ", "_") + "-" + irr.gloss + ".NSP"
+        trans[iw] = trans[iw].replace('-pre', '-PRE')
+        trans[iw] = trans[iw].replace('-pas', '-PAS')
+        trans[iw] = trans[iw].replace('-fut', '-FUT')
+        trans[iw] = trans[iw].replace('.perf', '.PERF')
+        trans[iw] = trans[iw].replace('-subj', '-SUBJ')
+        trans[iw] = trans[iw].replace('-supp', '-SUPP')
+        trans[iw] = trans[iw].replace('-imp', '-IMP')
+        trans[iw] = trans[iw].replace('.1s', '.1S')
+        trans[iw] = trans[iw].replace('.2s', '.2S')
+        trans[iw] = trans[iw].replace('.nsp', '.NSP')
     return " ".join(trans)

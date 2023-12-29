@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText, infForm
+from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText, infForm, gloss
 from app.models import Lexicon, Phonology, Texts, VerbInflections
 import app.customscripts as cs
 from sqlalchemy.sql import collate
@@ -221,6 +221,7 @@ def createtext():
 @app.route('/texts/<id>/', methods=['GET', 'POST'])
 def readtext(id):
     match = Texts.query.filter(Texts.id == id).first()
+    print(match.translation)
     return render_template('readtext.html', match=match)
 
 
@@ -318,4 +319,16 @@ def viewgloss(id):
     tsplits = []
     for sentence in splits:
         tsplits.append(cs.gloss(sentence))
-    return render_template('viewgloss.html', match=match, status=status, splits=splits, tsplits=tsplits)
+    return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits)
+
+@app.route('/gloss/', methods=['GET', 'POST'])
+def glosshome():
+    form = gloss()
+    if form.validate_on_submit():
+        splits = re.split(r'(?<=[\.\!\?\,\-])\s*', form.text.data)
+        splits.pop()
+        tsplits = []
+        for sentence in splits:
+            tsplits.append(cs.gloss(sentence))
+        return render_template('glossview.html', splits=splits, tsplits=tsplits)
+    return render_template('glosshome.html', form=form)
