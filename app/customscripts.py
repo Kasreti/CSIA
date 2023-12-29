@@ -1,57 +1,65 @@
 from app.models import Lexicon, Phonology, VerbInflections
 from sqlalchemy import func, desc
 import re
+
+
 def ipacreate(word):
-    check = word
-    dg = []
-    mg = []
-    exists = Phonology.query.filter(Phonology.exists == True).all()
-    for phoneme in exists:
-        if len(phoneme.romanized) == 2:
-            dg.append(phoneme)
-        else:
-            mg.append(phoneme)
-    for di in dg:
-        din = word.find(di.romanized)
-        if(din >= 0):
-            if(check[din] != '!'):
-                word = word.replace(di.romanized, di.ipa)
-                check = check.replace(di.romanized, '!!')
-    for mo in mg:
-        mon = word.find(mo.romanized)
-        if (mon >= 0):
-            if (check[mon] != '!'):
-                word = word.replace(mo.romanized, mo.ipa)
-                check = check.replace(di.romanized, '!')
-    for index in range(0, len(word)-1):
-        if word[index] == word[index+1]:
-            word = word[:index+1] + "ː" + word[index + 2:]
+    for i in range(2):
+        word = word.casefold()
+        check = word
+        dg = []
+        mg = []
+        exists = Phonology.query.filter(Phonology.exists == True).all()
+        for phoneme in exists:
+            if len(phoneme.romanized) == 2:
+                dg.append(phoneme)
+            else:
+                mg.append(phoneme)
+        for di in dg:
+            din = word.find(di.romanized)
+            if (din >= 0):
+                if (check[din] != '!'):
+                    word = word.replace(di.romanized, di.ipa)
+                    check = check.replace(di.romanized, '!!')
+        for mo in mg:
+            mon = word.find(mo.romanized)
+            if (mon >= 0):
+                if (check[mon] != '!'):
+                    word = word.replace(mo.romanized, mo.ipa)
+                    check = check.replace(di.romanized, '!')
+        for index in range(0, len(word) - 1):
+            if word[index] == word[index + 1]:
+                word = word[:index + 1] + "ː" + word[index + 2:]
     return word
 
+
 def concreate(word):
-    check = word
-    ow = word
-    dg = []
-    mg = []
-    exists = Phonology.query.filter(Phonology.exists == True).all()
-    for phoneme in exists:
-        if len(phoneme.romanized) == 2:
-            dg.append(phoneme)
-        else:
-            mg.append(phoneme)
-    for di in dg:
-        din = ow.find(di.romanized)
-        if(din >= 0):
-            if(check[din] != '!'):
-                word = word.replace(di.romanized, di.conscript)
-                check = check.replace(di.romanized, '!!')
-    for mo in mg:
-        mon = ow.find(mo.romanized)
-        if (mon >= 0):
-            if (check[mon] != '!'):
-                word = word.replace(mo.romanized, mo.conscript)
-                check = check.replace(mo.romanized, '!')
+    for i in range(2):
+        word = word.casefold()
+        check = word.casefold()
+        ow = word
+        dg = []
+        mg = []
+        exists = Phonology.query.filter(Phonology.exists == True).all()
+        for phoneme in exists:
+            if len(phoneme.romanized) == 2:
+                dg.append(phoneme)
+            else:
+                mg.append(phoneme)
+        for di in dg:
+            din = ow.find(di.romanized)
+            if (din >= 0):
+                if (check[din] != '!'):
+                    word = word.replace(di.romanized, di.conscript)
+                    check = check.replace(di.romanized, '!!')
+        for mo in mg:
+            mon = ow.find(mo.romanized)
+            if (mon >= 0):
+                if (check[mon] != '!'):
+                    word = word.replace(mo.romanized, mo.conscript)
+                    check = check.replace(mo.romanized, '!')
     return word
+
 
 def midcheck(c, w, o):
     str = ""
@@ -67,6 +75,7 @@ def midcheck(c, w, o):
         str3 = str3 + x
     print(str3)
     return
+
 
 def gloss(sen):
     words = Lexicon.query.order_by(desc(func.length(Lexicon.word))).all()

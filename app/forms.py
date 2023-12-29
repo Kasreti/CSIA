@@ -167,7 +167,7 @@ class searchText(FlaskForm):
     submit = SubmitField('Search')
 
 class infForm(FlaskForm):
-    submit = SubmitField('Save verb inflections')
+    submit = SubmitField('Save all inflections')
 
 class gloss(FlaskForm):
     title = StringField('Title')

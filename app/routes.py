@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
 from app.forms import createWord, searchWord, deleteWord, ipatable, createText, searchText, modifyText, infForm, gloss
-from app.models import Lexicon, Phonology, Texts, VerbInflections
+from app.models import Lexicon, Phonology, Texts, VerbInflections, NounInflections
 import app.customscripts as cs
 from sqlalchemy.sql import collate
 import re
@@ -69,6 +69,9 @@ def word(name):
     if match.partofspeech == "Verb":
         for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
             inf.append(inflection)
+    elif match.partofspeech == "Noun":
+        for inflection in NounInflections.query.filter(NounInflections.irregular == 0).all():
+            inf.append(inflection)
     if match.irregular == 1:
         irf = []
         if match.partofspeech == "Verb":
@@ -76,9 +79,24 @@ def word(name):
                            'Imperative']:
                 m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
                 irf.append(m2)
+        elif match.partofspeech == "Noun":
+            m2 = (NounInflections.query.filter(NounInflections.number == (match.word + " SG")).first())
+            if m2 != None:
+                irf.append(NounInflections(match.word + " SG", 1, m2.NOM, m2.ACC, m2.GEN, m2.DAT, m2.OBL))
+            else:
+                irf.append(NounInflections(match.word + "temp", 1, "", "", "", "", ""))
+            m3 = (NounInflections.query.filter(NounInflections.number == (match.word + " PL")).first())
+            if m3 != None:
+                irf.append(NounInflections(match.word + " SG", 1, m3.NOM, m3.ACC, m3.GEN, m3.DAT, m3.OBL))
+            else:
+                irf.append(NounInflections(match.word + "temp", 1, "", "", "", "", ""))
     else:
-        placeholder = VerbInflections("temp", 1, "NA", "", "" , "")
-        irf = [placeholder]*7
+        if match.partofspeech == "Verb":
+            placeholder = VerbInflections("temp", 1, "NA", "", "" , "")
+            irf = [placeholder]*7
+        elif match.partofspeech == "Noun":
+            placeholder = NounInflections(match.word + "temp", 1, "", "", "", "", "")
+            irf = [placeholder]*2
     return render_template('word.html', word=match, inf=inf, irf=irf)
 
 
@@ -100,9 +118,18 @@ def modifyword(name):
                            'Imperative']:
                 m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
                 irf.append(m2)
+        elif match.partofspeech == "Noun":
+            SG = (NounInflections.query.filter(NounInflections.number == (match.word + " SG")).first())
+            PL = (NounInflections.query.filter(NounInflections.number == (match.word + " PL")).first())
     else:
-        placeholder = VerbInflections("temp", 1, "NA", "", "", "")
-        irf = [placeholder] * 7
+        if match.partofspeech == "Verb":
+            placeholder = VerbInflections("temp", 1, "NA", "", "", "")
+            irf = [placeholder] * 7
+        elif match.partofspeech == "Noun":
+            placeholder = NounInflections(match.word + "temp", 1, "", "", "", "", "")
+            irf = [placeholder] * 2
+        SG = ""
+        PL = ""
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
@@ -116,6 +143,7 @@ def modifyword(name):
             refitem.conscript = cs.concreate(refitem.word)
         else:
             refitem.conscript = form.conscript.data
+
         refitem.definition = form.definition.data
         refitem.partofspeech = selectedpos
         refitem.inflection = form.inflection.data
@@ -123,10 +151,11 @@ def modifyword(name):
         refitem.notes = form.notes.data
         refitem.irregular = form.irregular.data
         refitem.etymology = form.etymology.data
-        if form.irregular.data:
+        if form.irregular.data and selectedpos == "Verb":
             for aspect in inf:
                 m2 = VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect.aspect)).first()
-                db.session.delete(m2)
+                if m2 is not None:
+                    db.session.delete(m2)
                 for key in request.form.keys():
                     for value in request.form.getlist(key):
                         if key == (aspect.aspect + " 1s"):
@@ -137,9 +166,29 @@ def modifyword(name):
                             other = value
                 newaspect = VerbInflections(refitem.word + " " + aspect.aspect, 1, aspect.gloss, fs, ss, other)
                 db.session.add(newaspect)
+        elif form.irregular.data and selectedpos == "Noun":
+            ninf = NounInflections.query.filter(NounInflections.irregular == 0).all()
+            for number in ninf:
+                m2 = NounInflections.query.filter(NounInflections.number == (match.word + " " + number.number)).first()
+                if m2 is not None:
+                    db.session.delete(m2)
+                for key in request.form.keys():
+                    for value in request.form.getlist(key):
+                        if key == (number.number + " NOM"):
+                            NOM = value
+                        elif key == (number.number + " ACC"):
+                            ACC = value
+                        elif key == (number.number + " GEN"):
+                            GEN = value
+                        elif key == (number.number + " DAT"):
+                            DAT = value
+                        elif key == (number.number + " OBL"):
+                            OBL = value
+                newaspect = NounInflections(form.word.data + " " + number.number, 1, NOM, ACC, GEN, DAT, OBL)
+                db.session.add(newaspect)
         db.session.commit()
         return redirect(url_for('word', name=form.word.data, word=match.word))
-    return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf, irf=irf)
+    return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf, irf=irf, SG=SG, PL=PL)
 
 
 @app.route('/word/<name>/delete', methods=['GET', 'POST'])
@@ -293,8 +342,11 @@ def editchecklist(id):
 def inflections():
     form = infForm()
     vinf = []
+    ninf = []
     for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
         vinf.append(inflection)
+    for inflection in NounInflections.query.filter(NounInflections.irregular == 0).all():
+        ninf.append(inflection)
     if form.validate_on_submit():
         flash('Inflections have been updated.')
         for aspect in vinf:
@@ -306,9 +358,22 @@ def inflections():
                         aspect.ss = value
                     elif key == (aspect.aspect + " gen"):
                         aspect.other = value
+        for number in ninf:
+            for key in request.form.keys():
+                for value in request.form.getlist(key):
+                    if key == (number.number + " NOM"):
+                        number.NOM = value
+                    elif key == (number.number + " ACC"):
+                        number.ACC = value
+                    elif key == (number.number + " GEN"):
+                        number.GEN = value
+                    elif key == (number.number + " DAT"):
+                        number.DAT = value
+                    elif key == (number.number + " OBL"):
+                        number.OBL = value
         db.session.commit()
         return redirect(request.url)
-    return render_template('inflections.html', verb=vinf, form=form)
+    return render_template('inflections.html', verb=vinf, form=form, SG=ninf[0], PL=ninf[1])
 
 @app.route('/texts/<id>/gloss', methods=['GET', 'POST'])
 def viewgloss(id):
@@ -317,9 +382,13 @@ def viewgloss(id):
     splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
     splits.pop()
     tsplits = []
+    ipa = []
+    con = []
     for sentence in splits:
         tsplits.append(cs.gloss(sentence))
-    return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits)
+        ipa.append(cs.ipacreate(sentence))
+        con.append(cs.concreate(sentence))
+    return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits, ipa=ipa, con=con)
 
 @app.route('/gloss/', methods=['GET', 'POST'])
 def glosshome():
@@ -328,7 +397,11 @@ def glosshome():
         splits = re.split(r'(?<=[\.\!\?\,\-])\s*', form.text.data)
         splits.pop()
         tsplits = []
+        ipa = []
+        con = []
         for sentence in splits:
             tsplits.append(cs.gloss(sentence))
-        return render_template('glossview.html', splits=splits, tsplits=tsplits)
+            ipa.append(cs.ipacreate(sentence))
+            con.append(cs.concreate(sentence))
+        return render_template('glossview.html', splits=splits, tsplits=tsplits, ipa=ipa, con=con)
     return render_template('glosshome.html', form=form)

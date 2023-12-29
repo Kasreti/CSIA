@@ -66,6 +66,101 @@
         </tbody>
         </table>
         {% endif %}
+        {% if word.partofspeech == "Noun" %}
+        <wordh2>Inflections</wordh2>
+        <table class="inftable">
+        <tbody>
+        <tr>
+            <td style="background-color: #c0cfe4;"></td>
+            <td style="background-color: #c0cfe4;"><b>Nominative</b></td>
+            <td style="background-color: #c0cfe4;"><b>Accusative</b></td>
+            <td style="background-color: #c0cfe4;"><b>Genitive</b></td>
+            <td style="background-color: #c0cfe4;"><b>Dative</b></td>
+            <td style="background-color: #c0cfe4;"><b>Oblique</b></td>
+        </tr>
+        <tr>
+            <td style="background-color: #c0cfe4;">
+                <b>Singular</b>
+            </td>
+            <td>
+                {% if irf[0].NOM %}
+                    {{ irf[0].NOM }}
+                {% else %}
+                    {{ word.word }}{{ inf[0].NOM }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[0].ACC %}
+                    {{ irf[0].ACC }}
+                {% else %}
+                    {{ word.word }}{{ inf[0].ACC }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[0].GEN %}
+                    {{ irf[0].GEN }}
+                {% else %}
+                    {{ word.word }}{{ inf[0].GEN }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[0].DAT %}
+                    {{ irf[0].DAT }}
+                {% else %}
+                    {{ word.word }}{{ inf[0].DAT }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[0].OBL %}
+                    {{ irf[0].OBL }}
+                {% else %}
+                    {{ word.word }}{{ inf[0].OBL }}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #c0cfe4;">
+                <b>Singular</b>
+            </td>
+            <td>
+                {% if irf[1].NOM != "" %}
+                    {{ irf[1].NOM }}
+                {% else %}
+                    {{ word.word }}{{ inf[1].NOM }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[1].ACC != "" %}
+                    {{ irf[1].ACC }}
+                {% else %}
+                    {{ word.word }}{{ inf[1].ACC }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[1].GEN != "" %}
+                    {{ irf[1].GEN }}
+                {% else %}
+                    {{ word.word }}{{ inf[1].GEN }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[1].DAT != "" %}
+                    {{ irf[1].DAT }}
+                {% else %}
+                    {{ word.word }}{{ inf[1].DAT }}
+                {% endif %}
+            </td>
+            <td>
+                {% if irf[1].OBL != "" %}
+                    {{ irf[1].OBL }}
+                {% else %}
+                    {{ word.word }}{{ inf[1].OBL }}
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+        </table>
+        {% endif %}
         {% endblock %}
     </body>
 </html>

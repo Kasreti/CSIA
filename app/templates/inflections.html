@@ -7,10 +7,10 @@
 <body>
 {% extends "base.html" %}
 {% block content %}
-<h1>Verb inflections</h1>
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <h3> {{ form.submit(class_="grb gena") }} </h3>
+    <h1>Verb inflections</h1>
     <table>
         <tbody>
         <tr>
@@ -35,6 +35,39 @@
             </td>
         </tr>
         {% endfor %}
+        </tbody>
+    </table>
+    <h1>Noun inflections</h1>
+    <table>
+        <tbody>
+        <tr>
+            <td></td>
+            <td><b>Nominative</b></td>
+            <td><b>Accusative</b></td>
+            <td><b>Genitive</b></td>
+            <td><b>Dative</b></td>
+            <td><b>Oblique</b></td>
+        </tr>
+        <tr>
+            <td>
+                <b>Singular</b>
+            </td>
+            <td><input type="text" name="SG NOM" value="{{ SG.NOM }}"></td>
+            <td><input type="text" name="SG ACC" value="{{ SG.ACC }}"></td>
+            <td><input type="text" name="SG GEN" value="{{ SG.GEN }}"></td>
+            <td><input type="text" name="SG DAT" value="{{ SG.DAT }}"></td>
+            <td><input type="text" name="SG OBL" value="{{ SG.OBL }}"></td>
+        </tr>
+        <tr>
+            <td>
+                <b>Plural</b>
+            </td>
+            <td><input type="text" name="PL NOM" value="{{ PL.NOM }}"></td>
+            <td><input type="text" name="PL ACC" value="{{ PL.ACC }}"></td>
+            <td><input type="text" name="PL GEN" value="{{ PL.GEN }}"></td>
+            <td><input type="text" name="PL DAT" value="{{ PL.DAT }}"></td>
+            <td><input type="text" name="PL OBL" value="{{ PL.OBL }}"></td>
+        </tr>
         </tbody>
     </table>
 </form>

@@ -85,5 +85,26 @@ class VerbInflections(db.Model):
         self.ss = ss
         self.other = other
 
+class NounInflections(db.Model):
+    __tablename__ = 'Noun Inflections'
+    number: so.Mapped[str] = so.mapped_column(primary_key=True)
+    irregular: so.Mapped[bool] = so.mapped_column()
+    NOM: so.Mapped[str] = so.mapped_column()
+    ACC: so.Mapped[str] = so.mapped_column()
+    GEN: so.Mapped[str] = so.mapped_column()
+    DAT: so.Mapped[str] = so.mapped_column()
+    OBL: so.Mapped[str] = so.mapped_column()
+    def __repr__(self):
+        return 'Noun conjugation for number {}'.format(self.number)
+
+    def __init__(self, number, irregular, NOM, ACC, GEN, DAT, OBL):
+        self.number = number
+        self.irregular = irregular
+        self.NOM = NOM
+        self.ACC = ACC
+        self.GEN = GEN
+        self.DAT = DAT
+        self.OBL = OBL
+
 with app.app_context():
     db.create_all()

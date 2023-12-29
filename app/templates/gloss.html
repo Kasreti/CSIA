@@ -16,6 +16,8 @@
         {% for portion in splits %}
             <wordh2>{{ portion }}</wordh2><br>
             <wordp>{{ tsplits[splits.index(portion)] }}</wordp><br>
+            <wordp>{{ ipa[splits.index(portion)] }}</wordp><br>
+            <wordp>{{ con[splits.index(portion)] }}</wordp><br>
         {% endfor %}
 {% endblock %}
 </body>
