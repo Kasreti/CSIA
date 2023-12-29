@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gloss for {{ match.title }}</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+    <wordh1>{{ match.title }}</wordh1>
+        <a href="{{ url_for('modifytext', id=match.id) }}">[edit]</a>
+        <a href="{{ url_for('deletetext', id=match.id) }}">[delete]</a><hr>
+    <wordh2>Progress: </wordh2><wordp>{{ match.status }}</wordp><br><br>
+        <wordh2>Original text</wordh2><br><wordp>{{ match.content }}</wordp><br><br>
+        <wordh2>Translation</wordh2> <a href="{{ url_for('readtext', id=match.id) }}">[hide gloss]</a><br>
+        {% for portion in splits %}
+            <wordh2>{{ portion }}</wordh2><br>
+            <wordp>{{ tsplits[splits.index(portion)] }}</wordp><br>
+        {% endfor %}
+{% endblock %}
+</body>
+</html>

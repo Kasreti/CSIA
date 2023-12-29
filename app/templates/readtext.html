@@ -12,7 +12,11 @@
         <a href="{{ url_for('deletetext', id=match.id) }}">[delete]</a><hr>
         <wordh2>Progress: </wordh2><wordp>{{ match.status }}</wordp><br><br>
         <wordh2>Original text</wordh2><br><wordp>{{ match.content }}</wordp><br><br>
-        <wordh2>Translation</wordh2><br><wordp>{{ match.translation }}</wordp><br><br>
+        <wordh2>Translation</wordh2>
+        {% if match.translation != "" %}
+        <a href="{{ url_for('viewgloss', id=match.id) }}">[view gloss]</a>
+        {% endif %}
+        <br><wordp>{{ match.translation }}</wordp><br><br>
         {% endblock %}
     </body>
 </html>

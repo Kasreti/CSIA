@@ -76,6 +76,9 @@ def word(name):
                            'Imperative']:
                 m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
                 irf.append(m2)
+    else:
+        placeholder = VerbInflections("temp", 1, "NA", "", "" , "")
+        irf = [placeholder]*7
     return render_template('word.html', word=match, inf=inf, irf=irf)
 
 
@@ -97,6 +100,9 @@ def modifyword(name):
                            'Imperative']:
                 m2 = (VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect)).first())
                 irf.append(m2)
+    else:
+        placeholder = VerbInflections("temp", 1, "NA", "", "", "")
+        irf = [placeholder] * 7
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
@@ -302,3 +308,14 @@ def inflections():
         db.session.commit()
         return redirect(request.url)
     return render_template('inflections.html', verb=vinf, form=form)
+
+@app.route('/texts/<id>/gloss', methods=['GET', 'POST'])
+def viewgloss(id):
+    match = Texts.query.filter(Texts.id == id).first()
+    status = ['Complete', 'Work in Progress', 'Incomplete']
+    splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
+    splits.pop()
+    tsplits = []
+    for sentence in splits:
+        tsplits.append(cs.gloss(sentence))
+    return render_template('viewgloss.html', match=match, status=status, splits=splits, tsplits=tsplits)
