@@ -24,7 +24,7 @@
         {% if word.notes != "" %}
             <wordh2>Notes</wordh2><br>
             <wordp>{{ word.notes }}</wordp>
-        {% endif %}
+        {% endif %}<br>
         {% if word.partofspeech == "Verb" %}
         <wordh2>Inflections</wordh2>
         <table class="inftable">
@@ -120,7 +120,7 @@
         </tr>
         <tr>
             <td style="background-color: #c0cfe4;">
-                <b>Singular</b>
+                <b>Plural</b>
             </td>
             <td>
                 {% if irf[1].NOM != "" %}

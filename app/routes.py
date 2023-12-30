@@ -66,6 +66,7 @@ def dictresults():
 def word(name):
     match = Lexicon.query.filter(Lexicon.word == name).first()
     inf = []
+    irf = []
     if match.partofspeech == "Verb":
         for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
             inf.append(inflection)
@@ -325,6 +326,7 @@ def editchecklist(id):
         flash('Checklist has been updated.')
         match.title = form.title.data
         match.content = form.content.data
+        db.session.commit()
         return redirect(request.url)
     for entry in checklist:
         m2 = Lexicon.query.filter(Lexicon.definition.icontains(entry)).order_by(collate(Lexicon.word, 'NOCASE')).first()
@@ -386,7 +388,7 @@ def viewgloss(id):
     con = []
     for sentence in splits:
         tsplits.append(cs.gloss(sentence))
-        ipa.append("/" + cs.ipacreate(sentence) + "/")
+        ipa.append(cs.ipacreate(sentence))
         con.append(cs.concreate(sentence))
     return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits, ipa=ipa, con=con)
 
@@ -395,13 +397,12 @@ def glosshome():
     form = gloss()
     if form.validate_on_submit():
         splits = re.split(r'(?<=[\.\!\?\,\-])\s*', form.text.data)
-        splits.pop()
         tsplits = []
         ipa = []
         con = []
         for sentence in splits:
             tsplits.append(cs.gloss(sentence))
-            ipa.append("/" + cs.ipacreate(sentence) + "/")
+            ipa.append(cs.ipacreate(sentence))
             con.append(cs.concreate(sentence))
         return render_template('glossview.html', splits=splits, tsplits=tsplits, ipa=ipa, con=con)
     return render_template('glosshome.html', form=form)

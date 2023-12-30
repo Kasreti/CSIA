@@ -38,7 +38,7 @@
                 {{ word }}
             </td>
             <td>
-                <a href="{{ url_for('word', name=word) }}">{{ exist[checklist.index(word)] }}</a>
+                <a href="{{ url_for('word', name=exist[checklist.index(word)]) }}">{{ exist[checklist.index(word)] }}</a>
             </td>
             <td>
                 {{ complete[checklist.index(word)] }}
