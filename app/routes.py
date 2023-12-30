@@ -386,7 +386,7 @@ def viewgloss(id):
     con = []
     for sentence in splits:
         tsplits.append(cs.gloss(sentence))
-        ipa.append(cs.ipacreate(sentence))
+        ipa.append("/" + cs.ipacreate(sentence) + "/")
         con.append(cs.concreate(sentence))
     return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits, ipa=ipa, con=con)
 
@@ -401,7 +401,7 @@ def glosshome():
         con = []
         for sentence in splits:
             tsplits.append(cs.gloss(sentence))
-            ipa.append(cs.ipacreate(sentence))
+            ipa.append("/" + cs.ipacreate(sentence) + "/")
             con.append(cs.concreate(sentence))
         return render_template('glossview.html', splits=splits, tsplits=tsplits, ipa=ipa, con=con)
     return render_template('glosshome.html', form=form)
