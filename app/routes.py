@@ -109,6 +109,8 @@ def modifyword(name):
     ogid = match.id
     form = createWord(obj=match)
     inf = []
+    SG = ""
+    PL = ""
     if match.partofspeech == "Verb":
         for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
             inf.append(inflection)
@@ -129,8 +131,6 @@ def modifyword(name):
         elif match.partofspeech == "Noun":
             placeholder = NounInflections(match.word + "temp", 1, "", "", "", "", "")
             irf = [placeholder] * 2
-        SG = ""
-        PL = ""
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
