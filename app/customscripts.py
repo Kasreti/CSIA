@@ -30,7 +30,7 @@ def ipacreate(word):
         for index in range(0, len(word) - 1):
             if word[index] == word[index + 1]:
                 word = word[:index + 1] + "ː" + word[index + 2:]
-    return word
+    return "/" + word + "/"
 
 
 def concreate(word):
