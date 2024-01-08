@@ -109,6 +109,7 @@ def modifyword(name):
     ogid = match.id
     form = createWord(obj=match)
     inf = []
+    irf = []
     SG = ""
     PL = ""
     if match.partofspeech == "Verb":
