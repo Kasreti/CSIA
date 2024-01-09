@@ -95,13 +95,16 @@ def gloss(sen):
                     for asp in revin:
                         if word.endswith(asp.fs):
                             word.replace(asp.fs, "!")
-                            trans[iw] = trans[iw].replace(asp.fs, "-" + asp.gloss + ".1S")
+                            new = "-" + asp.gloss + ".1S"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.fs, 1))
                         elif word.endswith(asp.ss):
                             word.replace(asp.ss, "!")
-                            trans[iw] = trans[iw].replace(asp.ss, "-" + asp.gloss + ".2S")
+                            new = "-" + asp.gloss + ".2S"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.ss, 1))
                         elif word.endswith(asp.other):
                             word.replace(asp.other, "!")
-                            trans[iw] = trans[iw].replace(asp.other, "-" + asp.gloss + ".NSP")
+                            new = "-" + asp.gloss + ".NSP"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.other, 1))
         for irr in irvin:
             if word.casefold() == irr.fs.casefold() and irr.fs != "":
                 word = ""
