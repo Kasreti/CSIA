@@ -1,4 +1,4 @@
-from app.models import Lexicon, Phonology, VerbInflections
+from app.models import Lexicon, Phonology, VerbInflections, NounInflections
 from sqlalchemy import func, desc
 import re
 
@@ -85,6 +85,8 @@ def gloss(sen):
     trans = sen.copy()
     revin = VerbInflections.query.filter(VerbInflections.irregular == 0).all()
     irvin = VerbInflections.query.filter(VerbInflections.irregular == 1).all()
+    renin = NounInflections.query.filter(NounInflections.irregular == 0).all()
+    irnin = NounInflections.query.filter(NounInflections.irregular == 1).all()
     for iw, word in enumerate(sen):
         word = re.sub(r"[,.!?]", '', word)
         for sec in words:
@@ -105,6 +107,24 @@ def gloss(sen):
                             word.replace(asp.other, "!")
                             new = "-" + asp.gloss + ".NSP"
                             trans[iw] = new.join(trans[iw].rsplit(asp.other, 1))
+                if sec.partofspeech == "Noun" and word != "":
+                    for asp in renin:
+                        if word.endswith(asp.ACC):
+                            word.replace(asp.ACC, "!")
+                            new = "-ACC"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.ACC, 1))
+                        elif word.endswith(asp.GEN):
+                            word.replace(asp.ss, "!")
+                            new = "-GEN"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.GEN, 1))
+                        elif word.endswith(asp.DAT):
+                            word.replace(asp.other, "!")
+                            new = "-DAT"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.DAT, 1))
+                        elif word.endswith(asp.OBL):
+                            word.replace(asp.other, "!")
+                            new = "-OBL"
+                            trans[iw] = new.join(trans[iw].rsplit(asp.OBL, 1))
         for irr in irvin:
             if word.casefold() == irr.fs.casefold() and irr.fs != "":
                 word = ""
@@ -121,14 +141,34 @@ def gloss(sen):
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
                 trans[iw] = orig.definition.replace(" ", "_") + "-" + irr.gloss + ".NSP"
-        trans[iw] = trans[iw].replace('-pre', '-PRE')
-        trans[iw] = trans[iw].replace('-pas', '-PAS')
-        trans[iw] = trans[iw].replace('-fut', '-FUT')
-        trans[iw] = trans[iw].replace('.perf', '.PERF')
-        trans[iw] = trans[iw].replace('-subj', '-SUBJ')
-        trans[iw] = trans[iw].replace('-supp', '-SUPP')
-        trans[iw] = trans[iw].replace('-imp', '-IMP')
-        trans[iw] = trans[iw].replace('.1s', '.1S')
-        trans[iw] = trans[iw].replace('.2s', '.2S')
-        trans[iw] = trans[iw].replace('.nsp', '.NSP')
+        for irr in irnin:
+            if word.casefold() == irr.NOM.casefold() and irr.NOM != "":
+                word = ""
+                noun = irr.number.split(" ", 1)
+                orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
+                trans[iw] = orig.definition.replace(" ", "_") + "-NOM." + noun[1]
+            elif word.casefold() == irr.ACC.casefold() and irr.ACC != "":
+                word = ""
+                noun = irr.number.split(" ", 1)
+                orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
+                trans[iw] = orig.definition.replace(" ", "_") + "-ACC." + noun[1]
+            elif word.casefold() == irr.GEN.casefold() and irr.GEN != "":
+                word = ""
+                noun = irr.number.split(" ", 1)
+                orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
+                trans[iw] = orig.definition.replace(" ", "_") + "-GEN." + noun[1]
+            elif word.casefold() == irr.DAT.casefold() and irr.DAT != "":
+                word = ""
+                noun = irr.number.split(" ", 1)
+                orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
+                trans[iw] = orig.definition.replace(" ", "_") + "-DAT." + noun[1]
+            elif word.casefold() == irr.OBL.casefold() and irr.OBL != "":
+                word = ""
+                noun = irr.number.split(" ", 1)
+                orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
+                trans[iw] = orig.definition.replace(" ", "_") + "-OBL." + noun[1]
+        if "-" in trans[iw]:
+            tempx = trans[iw].split("-", 1)
+            tempx[1] = tempx[1].upper()
+            trans[iw] = tempx[0] + "-" + tempx[1]
     return " ".join(trans)
