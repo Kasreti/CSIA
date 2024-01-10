@@ -13,7 +13,6 @@ def index():
     user = {'username': 'miguel'}
     return render_template('index.html', title='Welcome', user=user)
 
-
 @app.route('/word/create', methods=['GET', 'POST'])
 def createword():
     pos = ['Adjective', 'Adverb', 'Conjunction', 'Demonstrative', 'Interrogative', 'Noun', 'Numeral', 'Pronoun',
@@ -38,7 +37,6 @@ def createword():
         return redirect(url_for('word', name=form.word.data))
     return render_template('createword.html', title='Create word', form=form, pos=pos)
 
-
 @app.route('/dictionary', methods=['GET', 'POST'])
 def dictionary():
     form = searchWord()
@@ -46,7 +44,6 @@ def dictionary():
         session['term'] = form.term.data
         return redirect(url_for('dictresults'))
     return render_template('dictionary.html', form=form)
-
 
 @app.route('/dictionary/search', methods=['GET', 'POST'])
 def dictresults():
@@ -60,7 +57,6 @@ def dictresults():
     else:
         stitle = "Results for " + substring
     return render_template('dictionaryresults.html', term=substring, title=stitle, matches=matches)
-
 
 @app.route('/word/<name>', methods=['GET', 'POST'])
 def word(name):
@@ -99,7 +95,6 @@ def word(name):
             placeholder = NounInflections(match.word + "temp", 1, "", "", "", "", "")
             irf = [placeholder]*2
     return render_template('word.html', word=match, inf=inf, irf=irf)
-
 
 @app.route('/word/<name>/edit', methods=['GET', 'POST'])
 def modifyword(name):
@@ -192,7 +187,6 @@ def modifyword(name):
         return redirect(url_for('word', name=form.word.data, word=match.word))
     return render_template('modifyword.html', word=match, form=form, pos=pos, inf=inf, irf=irf, SG=SG, PL=PL)
 
-
 @app.route('/word/<name>/delete', methods=['GET', 'POST'])
 def deleteword(name):
     match = Lexicon.query.filter(Lexicon.word == name).first()
@@ -205,7 +199,6 @@ def deleteword(name):
         db.session.commit()
         return redirect(url_for('dictionary'))
     return render_template('deleteword.html', word=match, form=form)
-
 
 @app.route('/phonology', methods=['GET', 'POST'])
 def phonology():
@@ -232,7 +225,6 @@ def phonology():
             field.data = match.exists
     return render_template('phonology.html', form=form, exists=exists)
 
-
 @app.route('/texts', methods=['GET', 'POST'])
 def texts():
     form = searchText()
@@ -241,7 +233,6 @@ def texts():
         session['title'] = form.title.data
         return redirect(url_for('textresults'))
     return render_template('texts.html', matches=matches, form=form)
-
 
 @app.route('/texts/search', methods=['GET', 'POST'])
 def textresults():
@@ -252,7 +243,6 @@ def textresults():
     else:
         stitle = "Results for " + substring
     return render_template('textresults.html', term=substring, title=stitle, matches=matches)
-
 
 @app.route('/texts/create', methods=['GET', 'POST'])
 def createtext():
@@ -268,13 +258,11 @@ def createtext():
         return redirect(url_for('modifytext', id=match.id))
     return render_template('createtext.html', form=form, status=status)
 
-
 @app.route('/texts/<id>/', methods=['GET', 'POST'])
 def readtext(id):
     match = Texts.query.filter(Texts.id == id).first()
     print(match.translation)
     return render_template('readtext.html', match=match)
-
 
 @app.route('/texts/<id>/delete', methods=['GET', 'POST'])
 def deletetext(id):
@@ -286,7 +274,6 @@ def deletetext(id):
         db.session.commit()
         return redirect(url_for('texts'))
     return render_template('deletetext.html', match=match, form=form)
-
 
 @app.route('/texts/<id>/edit', methods=['GET', 'POST'])
 def modifytext(id):
@@ -315,7 +302,6 @@ def modifytext(id):
         return redirect(url_for('readtext', id=match.id))
     return render_template('modifytext.html', form=form, match=match, status=status, splits=splits, tsplits=tsplits)
 
-
 @app.route('/checklist/<id>', methods=['GET', 'POST'])
 def editchecklist(id):
     match = Texts.query.filter(Texts.id == id).first()
@@ -339,7 +325,6 @@ def editchecklist(id):
             complete.append("No")
     return render_template('modifychecklist.html', match=match, form=form, checklist=checklist,
                            exist=exist, complete=complete)
-
 
 @app.route('/inflections', methods=['GET', 'POST'])
 def inflections():
