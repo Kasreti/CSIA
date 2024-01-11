@@ -109,21 +109,25 @@ def gloss(sen):
                             trans[iw] = new.join(trans[iw].rsplit(asp.other, 1))
                 if sec.partofspeech == "Noun" and word != "":
                     for asp in renin:
-                        if word.endswith(asp.ACC):
+                        if word.endswith(asp.NOM) and asp.number == "PL":
+                            word.replace(asp.NOM, "!")
+                            new = "-NOM." + asp.number
+                            trans[iw] = new.join(trans[iw].rsplit(asp.NOM, 1))
+                        elif word.endswith(asp.ACC):
                             word.replace(asp.ACC, "!")
-                            new = "-ACC"
+                            new = "-ACC." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.ACC, 1))
                         elif word.endswith(asp.GEN):
                             word.replace(asp.ss, "!")
-                            new = "-GEN"
+                            new = "-GEN." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.GEN, 1))
                         elif word.endswith(asp.DAT):
                             word.replace(asp.other, "!")
-                            new = "-DAT"
+                            new = "-DAT." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.DAT, 1))
                         elif word.endswith(asp.OBL):
                             word.replace(asp.other, "!")
-                            new = "-OBL"
+                            new = "-OBL." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.OBL, 1))
         for irr in irvin:
             if word.casefold() == irr.fs.casefold() and irr.fs != "":
