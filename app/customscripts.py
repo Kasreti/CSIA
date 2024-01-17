@@ -118,7 +118,7 @@ def gloss(sen):
                             new = "-ACC." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.ACC, 1))
                         elif word.endswith(asp.GEN):
-                            word.replace(asp.ss, "!")
+                            word.replace(asp.GEN, "!")
                             new = "-GEN." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.GEN, 1))
                         elif word.endswith(asp.DAT):
