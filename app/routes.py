@@ -280,10 +280,12 @@ def modifytext(id):
     match = Texts.query.filter(Texts.id == id).first()
     status = ['Complete', 'Work in Progress', 'Incomplete']
     form = modifyText(obj=match)
-    splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.content)
+    # match.content, which contains the full text as saved, is split into multiple lines
+    # that can be separated at each punctuation mark.
+    splits = re.split(r'(?<=[.!?,\-:;])\s*', match.content)
     splits.pop()
     if (match.translation != None):
-        tsplits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
+        tsplits = re.split(r'(?<=[.!?,\-:;])\s*', match.translation)
         tsplits.pop()
     else:
         tsplits = [''] * len(splits)
@@ -316,6 +318,9 @@ def editchecklist(id):
         db.session.commit()
         return redirect(request.url)
     for entry in checklist:
+        # This line finds the first match in the Lexicon database that contains the substring entry
+        # within the definition. The order_by(collate()) section ensures that the search results will
+        # be caps-insensitive and sort it by alphabetical order, and it takes the first result.
         m2 = Lexicon.query.filter(Lexicon.definition.icontains(entry)).order_by(collate(Lexicon.word, 'NOCASE')).first()
         if m2 is not None:
             exist.append(m2.word)

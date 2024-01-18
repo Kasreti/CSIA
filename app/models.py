@@ -30,8 +30,12 @@ class Lexicon(db.Model):
         self.partofspeech = partofspeech
         self.irregular = irregular
 
+
 class Phonology(db.Model):
+    # Generates the table name.
     __tablename__ = 'Phonology'
+
+    # Generates the columns of the table.
     phoneme: so.Mapped[str] = so.mapped_column(primary_key=True)
     ipa: so.Mapped[str] = so.mapped_column(sa.String(5), index=True)
     exists: so.Mapped[bool] = so.mapped_column()
@@ -39,9 +43,11 @@ class Phonology(db.Model):
     romanized: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
     conscript: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
 
+    # Adds a way for the phoneme to be expressed when printed.
     def __repr__(self):
         return 'Phoneme {}'.format(self.ipa)
 
+    # Constructor method for the column fields.
     def __init__(self, phoneme, ipa, exists, consonant, romanized=None, conscript=None):
         self.phoneme = phoneme
         self.ipa = ipa
