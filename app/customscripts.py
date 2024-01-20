@@ -88,9 +88,11 @@ def gloss(sen):
     renin = NounInflections.query.filter(NounInflections.irregular == 0).all()
     irnin = NounInflections.query.filter(NounInflections.irregular == 1).all()
     for iw, word in enumerate(sen):
+        exist = False
         word = re.sub(r"[,.!?]", '', word)
         for sec in words:
             if sec.word.casefold() in word.casefold():
+                exist = True
                 trans[iw] = trans[iw].casefold().replace(sec.word.casefold(), sec.definition.replace(" ", "_"))
                 word = word.casefold().replace(sec.word.casefold(), "")
                 if sec.partofspeech == "Verb" and word != "":
@@ -134,45 +136,55 @@ def gloss(sen):
                 word = ""
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-" + irr.gloss + ".1S"
+                trans[iw] = orig.definition.replace(" ", "_") + "." + irr.gloss + ".1S"
+                exist = True
             elif word.casefold() == irr.ss.casefold() and irr.ss != "":
                 word = ""
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-" + irr.gloss + ".2S"
+                trans[iw] = orig.definition.replace(" ", "_") + "." + irr.gloss + ".2S"
+                exist = True
             elif word.casefold() == irr.other.casefold() and irr.other != "":
                 word = ""
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-" + irr.gloss + ".NSP"
+                trans[iw] = orig.definition.replace(" ", "_") + "." + irr.gloss + ".NSP"
+                exist = True
         for irr in irnin:
             if word.casefold() == irr.NOM.casefold() and irr.NOM != "":
                 word = ""
                 noun = irr.number.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-NOM." + noun[1]
+                trans[iw] = orig.definition.replace(" ", "_") + ".NOM." + noun[1]
+                exist = True
             elif word.casefold() == irr.ACC.casefold() and irr.ACC != "":
                 word = ""
                 noun = irr.number.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-ACC." + noun[1]
+                trans[iw] = orig.definition.replace(" ", "_") + ".ACC." + noun[1]
+                exist = True
             elif word.casefold() == irr.GEN.casefold() and irr.GEN != "":
                 word = ""
                 noun = irr.number.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-GEN." + noun[1]
+                trans[iw] = orig.definition.replace(" ", "_") + ".GEN." + noun[1]
+                exist = True
             elif word.casefold() == irr.DAT.casefold() and irr.DAT != "":
                 word = ""
                 noun = irr.number.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-DAT." + noun[1]
+                trans[iw] = orig.definition.replace(" ", "_") + ".DAT." + noun[1]
+                exist = True
             elif word.casefold() == irr.OBL.casefold() and irr.OBL != "":
                 word = ""
                 noun = irr.number.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
-                trans[iw] = orig.definition.replace(" ", "_") + "-OBL." + noun[1]
+                trans[iw] = orig.definition.replace(" ", "_") + ".OBL." + noun[1]
+                exist = True
         if "-" in trans[iw]:
             tempx = trans[iw].split("-", 1)
             tempx[1] = tempx[1].upper()
             trans[iw] = tempx[0] + "-" + tempx[1]
+        if not exist:
+            trans[iw] = "*" + trans[iw]
     return " ".join(trans)

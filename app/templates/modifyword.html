@@ -7,7 +7,7 @@
 <body>
 {% extends "base.html" %}
 {% block content %}
-    <h1>Create a new word</h1>
+    <h1>Modify {{ word.word }}</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
@@ -38,7 +38,7 @@
                 {% for error in form.definition.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </p><br>
+            </p>
         <p> {{ form.notes.label }}<br>{{ form.notes(size=48) }}
                 {% for error in form.word.errors %}
                     <span style="color: red;">[{{ error }}]</span>

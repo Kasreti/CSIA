@@ -20,11 +20,7 @@
         {% if word.irregular %}
          (irregular)
         {% endif %}</wordh2><br>
-        <wordp>{{ word.definition }}</wordp><br><br>
-        {% if word.notes != "" %}
-            <wordh2>Notes</wordh2><br>
-            <wordp>{{ word.notes }}</wordp>
-        {% endif %}<br>
+        <wordp>{{ word.definition }}. {{ word.notes }}</wordp><br>
         {% if word.partofspeech == "Verb" %}
         <br><wordh2>Inflections</wordh2>
         <table class="inftable">
