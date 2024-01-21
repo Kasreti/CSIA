@@ -101,7 +101,7 @@ def modifyword(name):
     pos = ['Adjective', 'Adverb', 'Conjunction', 'Demonstrative', 'Interrogative', 'Noun', 'Numeral', 'Pronoun',
            'Proper noun', 'Verb']
     match = Lexicon.query.filter(Lexicon.word == name).first()
-    ogid = match.id
+    originalid = match.id
     form = createWord(obj=match)
     inf = []
     irf = []
@@ -130,7 +130,7 @@ def modifyword(name):
     if form.validate_on_submit():
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
-        refitem = Lexicon.query.get(ogid)
+        refitem = Lexicon.query.get(originalid)
         refitem.word = form.word.data
         if form.pronunciation.data == '':
             refitem.pronunciation = cs.ipacreate(refitem.word)
@@ -190,12 +190,15 @@ def modifyword(name):
 @app.route('/word/<name>/delete', methods=['GET', 'POST'])
 def deleteword(name):
     match = Lexicon.query.filter(Lexicon.word == name).first()
-    ogid = match.id
-    ogword = match.word
+    originalid = match.id
+    originalword = match.word
     form = deleteWord()
     if form.validate_on_submit():
-        flash('{} has been deleted.'.format(ogword))
-        Lexicon.query.filter(Lexicon.id == ogid).delete()
+        flash('{} has been deleted.'.format(originalword))
+        # Find the entry in Lexicon that has the same ID to the word that is to be deleted,
+        # and deleted the entry.
+        Lexicon.query.filter(Lexicon.id == originalid).delete()
+        # Save the database.
         db.session.commit()
         return redirect(url_for('dictionary'))
     return render_template('deleteword.html', word=match, form=form)
@@ -250,9 +253,12 @@ def createtext():
     form = createText()
     if form.validate_on_submit():
         nstatus = request.form.get('status')
+        # Using the constructor created earlier, a new Texts object is created.
         created = Texts(form.title.data, nstatus, form.content.data)
         flash('Translatable text {} with status {} created.'.format(created.title, created.status))
+        # The new object is added to the database.
         db.session.add(created)
+        # The database is saved.
         db.session.commit()
         match = Texts.query.filter(Texts.title == form.title.data).first()
         return redirect(url_for('modifytext', id=match.id))
@@ -306,15 +312,20 @@ def modifytext(id):
 
 @app.route('/checklist/<id>', methods=['GET', 'POST'])
 def editchecklist(id):
+    # The correct text has been selected by matching it with the right ID.
     match = Texts.query.filter(Texts.id == id).first()
     form = modifyText(obj=match)
     checklist = match.content.split(", ")
     exist = []
     complete = []
+    # When the form has been sumbmitted...
     if form.validate_on_submit():
+        # Display a message at the top of the screen.
         flash('Checklist has been updated.')
+        # Update the fields of the selected object with the form's data.
         match.title = form.title.data
         match.content = form.content.data
+        # Save to database.
         db.session.commit()
         return redirect(request.url)
     for entry in checklist:

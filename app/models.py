@@ -1,7 +1,34 @@
-from typing import Optional
 import sqlalchemy as sa
+# ORM is what translates the classes defined below into tables usable by the database.
 import sqlalchemy.orm as so
 from app import db, app
+
+# Each class here represents one table in the database.
+class Phonology(db.Model):
+    # Generates the table name.
+    __tablename__ = 'Phonology'
+
+    # Generates the columns of the table.
+    phoneme: so.Mapped[str] = so.mapped_column(sa.String(7), primary_key=True)
+    # The VARCHAR(5) restrictions can be seen in sa.String(5).
+    ipa: so.Mapped[str] = so.mapped_column(sa.String(5), index=True)
+    exists: so.Mapped[bool] = so.mapped_column()
+    consonant: so.Mapped[bool] = so.mapped_column()
+    romanized: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
+    conscript: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
+
+    # Adds a way for the phoneme to be represented when printed.
+    def __repr__(self):
+        return 'Phoneme {}'.format(self.ipa)
+
+    # Constructor method for the column fields.
+    def __init__(self, phoneme, ipa, exists, consonant, romanized=None, conscript=None):
+        self.phoneme = phoneme
+        self.ipa = ipa
+        self.exists = exists
+        self.consonant = consonant
+        self.romanized = romanized
+        self.conscript = conscript
 
 class Lexicon(db.Model):
     __tablename__ = 'Lexicon'
@@ -29,32 +56,6 @@ class Lexicon(db.Model):
         self.etymology = etymology
         self.partofspeech = partofspeech
         self.irregular = irregular
-
-
-class Phonology(db.Model):
-    # Generates the table name.
-    __tablename__ = 'Phonology'
-
-    # Generates the columns of the table.
-    phoneme: so.Mapped[str] = so.mapped_column(primary_key=True)
-    ipa: so.Mapped[str] = so.mapped_column(sa.String(5), index=True)
-    exists: so.Mapped[bool] = so.mapped_column()
-    consonant: so.Mapped[bool] = so.mapped_column()
-    romanized: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
-    conscript: so.Mapped[str] = so.mapped_column(sa.String(5), nullable=True)
-
-    # Adds a way for the phoneme to be expressed when printed.
-    def __repr__(self):
-        return 'Phoneme {}'.format(self.ipa)
-
-    # Constructor method for the column fields.
-    def __init__(self, phoneme, ipa, exists, consonant, romanized=None, conscript=None):
-        self.phoneme = phoneme
-        self.ipa = ipa
-        self.exists = exists
-        self.consonant = consonant
-        self.romanized = romanized
-        self.conscript = conscript
 
 class Texts(db.Model):
     __tablename__ = 'Texts'
