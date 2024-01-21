@@ -57,6 +57,7 @@ class Lexicon(db.Model):
         self.partofspeech = partofspeech
         self.irregular = irregular
 
+# db.Model here is inherited from the Model defined in Flask_SQLAlchemy's library.
 class Texts(db.Model):
     __tablename__ = 'Texts'
     id: so.Mapped[int] = so.mapped_column(primary_key=True)

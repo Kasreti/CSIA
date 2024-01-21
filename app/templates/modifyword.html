@@ -18,18 +18,18 @@
                 {% endfor %}
             </h2>
             <p> {{ form.conscript.label }}<br>{{ form.conscript(size=16) }}
-                {% for error in form.word.errors %}
+                {% for error in form.conscript.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
 
         <p> {{ form.etymology.label }}<br>{{ form.etymology(size=16) }}
-                {% for error in form.word.errors %}
+                {% for error in form.etymology.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
         <p> {{ form.pronunciation.label }}<br>{{ form.pronunciation(size=16) }}
-                {% for error in form.word.errors %}
+                {% for error in form.pronunciation.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
@@ -40,7 +40,7 @@
                 {% endfor %}
             </p>
         <p> {{ form.notes.label }}<br>{{ form.notes(size=48) }}
-                {% for error in form.word.errors %}
+                {% for error in form.notes.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
@@ -57,15 +57,12 @@
                 </select>
             </p>
             <p> {{ form.wordclass.label }}<br>{{ form.wordclass(size=16) }}
-                {% for error in form.word.errors %}
+                {% for error in form.wordclass.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
         {% if word.partofspeech == "Verb" %}
         <p> {{ form.irregular.label }}<br>{{ form.irregular(size=48) }}
-                {% for error in form.irregular.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
             </p>
         <p>Irregular forms</p>
         <p style="color:red; font-size: 12pt;">Note: Your irregular forms will not save if the irregular box is not ticked!</p>

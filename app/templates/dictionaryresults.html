@@ -10,6 +10,7 @@
         <h1>{{ title }}</h1>
         <h3 style="text-align:center, margin:auto"><a href="{{ url_for('dictionary') }}">⋘ Return to search page</a></h3>
         <hr>
+        <!-- Every match in search results is listed out. -->
         {% for match in matches %}
         <a href="{{ url_for('word', name=match.word) }}"><h2>{{ match.word }}</h2></a>
         <lightp>{{ match.partofspeech }}. {{ match.definition }}</lightp>

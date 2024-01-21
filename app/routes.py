@@ -10,8 +10,7 @@ import re
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'username': 'miguel'}
-    return render_template('index.html', title='Welcome', user=user)
+    return render_template('index.html', title='Welcome')
 
 @app.route('/word/create', methods=['GET', 'POST'])
 def createword():
@@ -41,13 +40,17 @@ def createword():
 def dictionary():
     form = searchWord()
     if form.validate_on_submit():
+        # The search keyword is saved as a session...
         session['term'] = form.term.data
         return redirect(url_for('dictresults'))
     return render_template('dictionary.html', form=form)
 
 @app.route('/dictionary/search', methods=['GET', 'POST'])
 def dictresults():
+    # ...and is passed into the dictionary results page...
     substring = session['term']
+    # where it can then be used in SQL queries.
+    # Matching results are found and put into an array...
     matches = (Lexicon.query.filter(Lexicon.word.icontains(substring)).order_by(
         collate(Lexicon.word, 'NOCASE')).all() or
                Lexicon.query.filter(Lexicon.definition.icontains(substring)).order_by(
@@ -56,6 +59,7 @@ def dictresults():
         stitle = "Showing all results"
     else:
         stitle = "Results for " + substring
+    # and passed to Jinja.
     return render_template('dictionaryresults.html', term=substring, title=stitle, matches=matches)
 
 @app.route('/word/<name>', methods=['GET', 'POST'])
@@ -296,6 +300,10 @@ def modifytext(id):
     else:
         tsplits = [''] * len(splits)
     if form.validate_on_submit():
+        # After the form has been submitted, form data can be obtained.
+        # The GET method was used here to instruct the server to skip
+        # over this code when no data has been submitted yet,
+        # instead skipping to render the page.
         flash('Translation has been updated.')
         newtrans = ""
         for key in request.form.keys():
@@ -308,6 +316,7 @@ def modifytext(id):
         match.translation = newtrans
         db.session.commit()
         return redirect(url_for('readtext', id=match.id))
+    # The page is rendered.
     return render_template('modifytext.html', form=form, match=match, status=status, splits=splits, tsplits=tsplits)
 
 @app.route('/checklist/<id>', methods=['GET', 'POST'])
@@ -408,3 +417,13 @@ def glosshome():
             con.append(cs.concreate(sentence))
         return render_template('glossview.html', splits=splits, tsplits=tsplits, ipa=ipa, con=con)
     return render_template('glosshome.html', form=form)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    flash("This page doesn't exist!")
+    return render_template("index.html")
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    flash("An internal server error has occurred! Please contact Kasreti.")
+    return render_template("index.html")

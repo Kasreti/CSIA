@@ -1,15 +1,31 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, BooleanField, TextAreaField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, NumberRange, ValidationError
 
+# Custom-defined length check validator, with default values min=1 and max=255
+def lengthcheck(min=1, max=255):
+    # The error message to be displayed.
+    message = 'Must be between %d and %d characters long.' % (min, max)
+    def _lengthcheck(form, field):
+        l = field.data and len(field.data) or 0
+        if l < min or max != -1 and l > max:
+            raise ValidationError(message)
+    return _lengthcheck
+
+def isint(form, field):
+    # This custom validator checks whether the inputted data fits into the restrictions.
+    if type(field.data) != int or field.data < 0:
+        raise ValidationError('Please enter a valid positive integer!')
 class createWord(FlaskForm):
-    word = StringField('Word', validators=[DataRequired()])
-    pronunciation = StringField('Pronunciation (leave empty to auto-generate)', validators=[Optional()])
-    conscript = StringField('Conscript (leave empty to auto-generate)', validators=[Optional()])
-    definition = StringField('Definition', validators=[DataRequired()])
+    # Each attribute has a validation check. The length check is being used here.
+    word = StringField('Word', validators=[DataRequired(), lengthcheck(max=50)])
+    # This validator checks if the data is a positive integer.
+    wordclass = StringField('Word class', validators=[Optional(), isint])
+    pronunciation = StringField('Pronunciation (leave empty to auto-generate)', validators=[Optional(), lengthcheck(max=50)])
+    conscript = StringField('Conscript (leave empty to auto-generate)', validators=[Optional(), lengthcheck(max=50)])
+    definition = StringField('Definition', validators=[DataRequired(), lengthcheck(max=255)])
     notes = StringField('Notes', validators=[Optional()])
     etymology = StringField('Etymology', validators=[Optional()])
-    wordclass = IntegerField('Word class', validators=[Optional()])
     inflection = StringField('Inflection', validators=[Optional()])
     irregular = BooleanField('Irregular', validators=[Optional()])
     csubmit = SubmitField('Create')
@@ -157,6 +173,7 @@ class createText(FlaskForm):
     content = TextAreaField('Text content', validators=[DataRequired()])
     submit = SubmitField('Create')
 
+# An example of a Flask Form.
 class modifyText(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Original content', validators=[DataRequired()])

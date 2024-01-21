@@ -5,7 +5,9 @@
     <title>{{ word.word }}</title>
 </head>
     <body>
+        <!-- The template base.html is inherited. -->
         {% extends "base.html" %}
+        <!-- The content of the page begins below.-->
         {% block content %}<br>
         <wordh1>{{ word.word }}</wordh1>
         <a href="{{ url_for('modifyword', name=word.word) }}">[edit]</a>
