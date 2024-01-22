@@ -187,6 +187,7 @@ class searchText(FlaskForm):
 class infForm(FlaskForm):
     submit = SubmitField('Save all inflections')
 
+# The form used to submit texts for glossing.
 class gloss(FlaskForm):
     title = StringField('Title')
     text = TextAreaField('Enter the text you want to be glossed.')

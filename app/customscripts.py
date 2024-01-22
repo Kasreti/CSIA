@@ -4,32 +4,27 @@ import re
 
 
 def ipacreate(word):
-    print("hi")
+    # Punctuation is removed from the string
     word = word.replace(".", "")
     word = word.replace(",", "")
+    # The process is repeated twice, in case any un-transcribed characters remain.
     for i in range(2):
+        # The whole word is converted into lowercase, as that is what the database uses.
         word = word.casefold()
-        check = word
-        dg = []
-        mg = []
+        # An empty array is created to store all the phonemes that are used in the language
+        # and its conscript equivalent.
+        phonemes = []
         exists = Phonology.query.filter(Phonology.exists == True).all()
         for phoneme in exists:
-            if len(phoneme.romanized) == 2:
-                dg.append(phoneme)
-            else:
-                mg.append(phoneme)
-        for di in dg:
-            din = word.find(di.romanized)
-            if (din >= 0):
-                if (check[din] != '!'):
-                    word = word.replace(di.romanized, di.ipa)
-                    check = check.replace(di.romanized, '!!')
-        for mo in mg:
-            mon = word.find(mo.romanized)
-            if (mon >= 0):
-                if (check[mon] != '!'):
-                    word = word.replace(mo.romanized, mo.ipa)
-                    check = check.replace(di.romanized, '!')
+            phonemes.append(phoneme)
+        # It is sorted using a selection sort from longest to shortest string.
+        phonemes = ipalengthsort(phonemes)
+        # Now that the array has been sorted, substrings will be replaced with its IPA equivalents.
+        for phoneme in phonemes:
+            word = word.replace(phoneme.romanized, phoneme.ipa)
+        # In IPA notation, long (or geminated) sounds are expressed with the ː symbol. For instance,
+        # /nn/ would instead be /nː/. Here, the loop finds two identical characters in a row,
+        # and replaces the latter with ː.
         for index in range(0, len(word) - 1):
             if word[index] == word[index + 1]:
                 word = word[:index + 1] + "ː" + word[index + 2:]
@@ -39,28 +34,16 @@ def ipacreate(word):
 def concreate(word):
     for i in range(2):
         word = word.casefold()
-        check = word.casefold()
-        ow = word
-        dg = []
-        mg = []
+        phonemes = []
         exists = Phonology.query.filter(Phonology.exists == True).all()
         for phoneme in exists:
-            if len(phoneme.romanized) == 2:
-                dg.append(phoneme)
-            else:
-                mg.append(phoneme)
-        for di in dg:
-            din = ow.find(di.romanized)
-            if (din >= 0):
-                if (check[din] != '!'):
-                    word = word.replace(di.romanized, di.conscript)
-                    check = check.replace(di.romanized, '!!')
-        for mo in mg:
-            mon = ow.find(mo.romanized)
-            if (mon >= 0):
-                if (check[mon] != '!'):
-                    word = word.replace(mo.romanized, mo.conscript)
-                    check = check.replace(mo.romanized, '!')
+            phonemes.append(phoneme)
+        phonemes = conlengthsort(phonemes)
+        for phoneme in phonemes:
+            word = word.replace(phoneme.romanized, phoneme.conscript)
+        for index in range(0, len(word) - 1):
+            if word[index] == word[index + 1]:
+                word = word[:index + 1] + "ː" + word[index + 2:]
     return word
 
 
@@ -190,7 +173,32 @@ def gloss(sen):
             trans[iw] = "*" + trans[iw]
     return " ".join(trans)
 
+
 def repwrite(text):
     f = open("app/static/replacements.txt", "w")
     f.write(text)
     f.close()
+
+
+def ipalengthsort(array):
+    size = len(array)
+    for ind in range(size):
+        min_index = ind
+        for i in range(ind + 1, size):
+            if len(array[i].romanized) > len(array[min_index].romanized):
+                min_index = i
+        (array[ind], array[min_index]) = (array[min_index], array[ind])
+    print(array)
+    return array
+
+
+def conlengthsort(array):
+    size = len(array)
+    for ind in range(size):
+        min_index = ind
+        for i in range(ind + 1, size):
+            if len(array[i].romanized) > len(array[min_index].romanized):
+                min_index = i
+        (array[ind], array[min_index]) = (array[min_index], array[ind])
+    print(array)
+    return array
