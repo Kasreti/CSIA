@@ -214,7 +214,7 @@ def phonology():
     if form.validate_on_submit():
         flash('Phonological inventory, romanization and conscript systems have been updated.')
         for field in form:
-            if field.name != 'csrf_token' and field.name != 'submit':
+            if field.name != 'csrf_token' and field.name != 'submit' and field.name != 'replacements':
                 match = Phonology.query.filter(Phonology.phoneme == field.name).first()
                 match.exists = field.data
         for temp in exists:
@@ -225,9 +225,11 @@ def phonology():
                     elif 'con ' + temp.phoneme == key:
                         temp.conscript = value
         db.session.commit()
+        print("wa")
+        print(form.replacements.data)
         return redirect(url_for('phonology'))
     for field in form:
-        if field.name != 'csrf_token' and field.name != 'submit':
+        if field.name != 'csrf_token' and field.name != 'submit' and field.name != 'replacements':
             match = Phonology.query.filter(Phonology.phoneme == field.name).first()
             field.data = match.exists
     return render_template('phonology.html', form=form, exists=exists)

@@ -24,8 +24,8 @@ class createWord(FlaskForm):
     pronunciation = StringField('Pronunciation (leave empty to auto-generate)', validators=[Optional(), lengthcheck(max=50)])
     conscript = StringField('Conscript (leave empty to auto-generate)', validators=[Optional(), lengthcheck(max=50)])
     definition = StringField('Definition', validators=[DataRequired(), lengthcheck(max=255)])
-    notes = StringField('Notes', validators=[Optional()])
-    etymology = StringField('Etymology', validators=[Optional()])
+    notes = TextAreaField('Notes', validators=[Optional()])
+    etymology = TextAreaField('Etymology', validators=[Optional()])
     inflection = StringField('Inflection', validators=[Optional()])
     irregular = BooleanField('Irregular', validators=[Optional()])
     csubmit = SubmitField('Create')
@@ -167,6 +167,7 @@ class ipatable(FlaskForm):
     opbr = BooleanField()
     # END
     submit = SubmitField('Save')
+    replacements = TextAreaField('Replacements', validators=[Optional()])
 
 class createText(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])

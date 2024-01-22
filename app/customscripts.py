@@ -4,6 +4,7 @@ import re
 
 
 def ipacreate(word):
+    print("hi")
     word = word.replace(".", "")
     word = word.replace(",", "")
     for i in range(2):
@@ -188,3 +189,8 @@ def gloss(sen):
         if not exist:
             trans[iw] = "*" + trans[iw]
     return " ".join(trans)
+
+def repwrite(text):
+    f = open("app/static/replacements.txt", "w")
+    f.write(text)
+    f.close()
