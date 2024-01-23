@@ -433,13 +433,13 @@
         {% endfor %}
         </tbody>
     </table>
-</form>
 <br>
 <h3>Custom replacements</h3>
 <p>Make a new line for every conscript replacement, in the format "romanization,conscript"</p>
 <p>For instance, "ka,か” will replace instances of ka with か when creating the conscript.</p>
-{{ form.replacements(style="height: 400px; margin-left: 10%; width: 10%; word-wrap: break-word; word-break: break-all;") }}
+{{ form.replacements(value=rep, style="height: 400px; margin-left: 10%; width: 10%; word-wrap: break-word; word-break: break-all;") }}
 <br><br><br>
+</form>
 {% endblock %}
 </body>
 </html>

@@ -166,8 +166,8 @@ class ipatable(FlaskForm):
     opbu = BooleanField()
     opbr = BooleanField()
     # END
-    submit = SubmitField('Save')
     replacements = TextAreaField('Replacements', validators=[Optional()])
+    submit = SubmitField('Save')
 
 class createText(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])

@@ -231,10 +231,15 @@ def phonology():
                         temp.romanized = value
                     elif 'con ' + temp.phoneme == key:
                         temp.conscript = value
+        rep = open("app/static/replacements.txt", "w")
+        rep.write(form.replacements.data)
+        rep.close()
         db.session.commit()
-        print("wa")
-        print(form.replacements.data)
         return redirect(url_for('phonology'))
+    reptxt = open("app/static/replacements.txt", "r")
+    rep = reptxt.read()
+    form.replacements.data = rep
+    reptxt.close()
     for field in form:
         if field.name != 'csrf_token' and field.name != 'submit' and field.name != 'replacements':
             match = Phonology.query.filter(Phonology.phoneme == field.name).first()

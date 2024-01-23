@@ -32,6 +32,15 @@ def ipacreate(word):
 
 
 def concreate(word):
+    # The
+    reptxt = open("app/static/replacements.txt", "r")
+    rep = reptxt.read()
+    reptxt.close()
+    customreps = rep.split("\n")
+    customreps[:] = [x for x in customreps if x.strip()]
+    for rep in customreps:
+        subs = rep.split(",")
+        word = word.replace(subs[0],subs[1])
     for i in range(2):
         word = word.casefold()
         phonemes = []
@@ -172,12 +181,6 @@ def gloss(sen):
         if not exist:
             trans[iw] = "*" + trans[iw]
     return " ".join(trans)
-
-
-def repwrite(text):
-    f = open("app/static/replacements.txt", "w")
-    f.write(text)
-    f.close()
 
 
 def ipalengthsort(array):
