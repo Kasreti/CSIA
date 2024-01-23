@@ -231,12 +231,16 @@ def phonology():
                         temp.romanized = value
                     elif 'con ' + temp.phoneme == key:
                         temp.conscript = value
-        rep = open("app/static/replacements.txt", "w")
+        # The file is opened with the 'write' mode -- overriding all existing data.
+        # It must have UTF-8 encoding to be able to support all characters that my client
+        # will need.
+        rep = open("app/static/replacements.txt", "w", encoding="utf-8")
+        # The entered data is written to the file, and the .txt is closed.
         rep.write(form.replacements.data)
         rep.close()
         db.session.commit()
         return redirect(url_for('phonology'))
-    reptxt = open("app/static/replacements.txt", "r")
+    reptxt = open("app/static/replacements.txt", "r", encoding="utf-8")
     rep = reptxt.read()
     form.replacements.data = rep
     reptxt.close()

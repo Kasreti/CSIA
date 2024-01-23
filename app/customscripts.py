@@ -32,13 +32,20 @@ def ipacreate(word):
 
 
 def concreate(word):
-    # The
-    reptxt = open("app/static/replacements.txt", "r")
+    # The saved custom replacements are loaded from the .txt file...
+    reptxt = open("app/static/replacements.txt", "r", encoding="utf-8")
+    # ...and are saved to a variable.
     rep = reptxt.read()
     reptxt.close()
+    # The blank line between every entry is removed.
     customreps = rep.split("\n")
+    # When saving to a .txt, single new lines erroneously get saved as double new
+    # lines. This removes any objects which are only composed of whitespace.
     customreps[:] = [x for x in customreps if x.strip()]
     for rep in customreps:
+        # Every replacement is saved in the format romanization,transcription (separated by a comma).
+        # The string is split into two around the comma, and what comes before the comma is replaced by
+        # what comes after.
         subs = rep.split(",")
         word = word.replace(subs[0],subs[1])
     for i in range(2):
@@ -73,60 +80,72 @@ def midcheck(c, w, o):
 
 
 def gloss(sen):
+    # Every word from the dictionary is put into an array,
+    # ordered from longest to shortest word length.
     words = Lexicon.query.order_by(desc(func.length(Lexicon.word))).all()
+    # The sentence is split into an array, separated at each space.
     sen = sen.split(" ")
+    # A parallel array is used to store the resulting gloss.
     trans = sen.copy()
+    # All regular and irregular inflections are loaded.
     revin = VerbInflections.query.filter(VerbInflections.irregular == 0).all()
     irvin = VerbInflections.query.filter(VerbInflections.irregular == 1).all()
     renin = NounInflections.query.filter(NounInflections.irregular == 0).all()
     irnin = NounInflections.query.filter(NounInflections.irregular == 1).all()
+    # Looping through every word in the sentence (iw finds the index of the
+    # word within the array)
     for iw, word in enumerate(sen):
+        # This boolean assumes that the word doesn't exist.
         exist = False
+        # All punctuation is removed from the word.
         word = re.sub(r"[,.!?]", '', word)
+        # Now, the current word in the sentence is compared against every word in the dictionary.
         for sec in words:
+            # The word is made to be all lowercase when comparing to prevent any issues.
             if sec.word.casefold() in word.casefold():
+                # If it exists, the boolean will become true.
                 exist = True
+                # As per glossing conventions, spaces are replaced with underscores.
+                # The word is replaced with its definition.
                 trans[iw] = trans[iw].casefold().replace(sec.word.casefold(), sec.definition.replace(" ", "_"))
-                word = word.casefold().replace(sec.word.casefold(), "")
+                # Here, the word is tested to see if it ends in a regular conjugation suffix. If so, the
+                # corresponding notation is appended to the gloss.
                 if sec.partofspeech == "Verb" and word != "":
                     for asp in revin:
                         if word.endswith(asp.fs):
-                            word.replace(asp.fs, "!")
                             new = "-" + asp.gloss + ".1S"
                             trans[iw] = new.join(trans[iw].rsplit(asp.fs, 1))
                         elif word.endswith(asp.ss):
-                            word.replace(asp.ss, "!")
                             new = "-" + asp.gloss + ".2S"
                             trans[iw] = new.join(trans[iw].rsplit(asp.ss, 1))
                         elif word.endswith(asp.other):
-                            word.replace(asp.other, "!")
                             new = "-" + asp.gloss + ".NSP"
                             trans[iw] = new.join(trans[iw].rsplit(asp.other, 1))
                 if sec.partofspeech == "Noun" and word != "":
                     for asp in renin:
                         if word.endswith(asp.NOM) and asp.number == "PL":
-                            word.replace(asp.NOM, "!")
                             new = "-NOM." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.NOM, 1))
                         elif word.endswith(asp.ACC):
-                            word.replace(asp.ACC, "!")
                             new = "-ACC." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.ACC, 1))
                         elif word.endswith(asp.GEN):
-                            word.replace(asp.GEN, "!")
                             new = "-GEN." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.GEN, 1))
                         elif word.endswith(asp.DAT):
-                            word.replace(asp.other, "!")
                             new = "-DAT." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.DAT, 1))
                         elif word.endswith(asp.OBL):
-                            word.replace(asp.other, "!")
                             new = "-OBL." + asp.number
                             trans[iw] = new.join(trans[iw].rsplit(asp.OBL, 1))
+        # The same process of comparing the word being glossed is repeated, but this time
+        # against the list of irregular inflections, which are not included in the Lexicon database.
         for irr in irvin:
             if word.casefold() == irr.fs.casefold() and irr.fs != "":
                 word = ""
+                # The string is split, only keeping the first portion of the aspect column,
+                # which has the word needed. Irregular conjugations are saved in the format
+                # "word aspect".
                 verb = irr.aspect.split(" ", 1)
                 orig = Lexicon.query.filter(Lexicon.word == verb[0]).first()
                 trans[iw] = orig.definition.replace(" ", "_") + "." + irr.gloss + ".1S"
@@ -174,10 +193,15 @@ def gloss(sen):
                 orig = Lexicon.query.filter(Lexicon.word == noun[0]).first()
                 trans[iw] = orig.definition.replace(" ", "_") + ".OBL." + noun[1]
                 exist = True
+        # During the lowercase comparison process, it may end up turning gloss notation,
+        # which should be in uppercase to lowercase. This script takes any suffixes, identifiable
+        # by the hyphen that separates it from the definition, and capitalizes anything after.
         if "-" in trans[iw]:
             tempx = trans[iw].split("-", 1)
             tempx[1] = tempx[1].upper()
             trans[iw] = tempx[0] + "-" + tempx[1]
+        # If exist is still not true (a match has not been found) after comparing against every single
+        # word, it is simply left untranslated with an asterisk prefixed to it.
         if not exist:
             trans[iw] = "*" + trans[iw]
     return " ".join(trans)
