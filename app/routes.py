@@ -31,7 +31,7 @@ def createword():
         else:
             conscript = form.conscript.data
         newword = Lexicon(form.word.data, pronunciation, conscript, form.definition.data,
-                          selectedpos, form.wordclass.data, form.notes.data, form.etymology.data, form.irregular.data)
+                          selectedpos, form.wordclass.data, form.notes.data, form.etymology.data, None)
         db.session.add(newword)
         db.session.commit()
         return redirect(url_for('word', name=form.word.data))
@@ -286,7 +286,10 @@ def createtext():
         # The database is saved.
         db.session.commit()
         match = Texts.query.filter(Texts.title == form.title.data).first()
-        return redirect(url_for('modifytext', id=match.id))
+        if match.nstatus=="Checklist":
+            return redirect(url_for('editchecklist', id=match.id))
+        else:
+            return redirect(url_for('modifytext', id=match.id))
     return render_template('createtext.html', form=form, status=status)
 
 
@@ -446,10 +449,11 @@ def glosshome():
         ipa = []
         con = []
         for sentence in splits:
-            tsplits.append(cs.gloss(sentence))
-            # Slashes are to be added around the IPA transcription as a standard convention.
-            ipa.append("/" + cs.ipacreate(sentence) + "/")
-            con.append(cs.concreate(sentence))
+            if sentence != "":
+                tsplits.append(cs.gloss(sentence))
+                # Slashes are to be added around the IPA transcription as a standard convention.
+                ipa.append("/" + cs.ipacreate(sentence) + "/")
+                con.append(cs.concreate(sentence))
         # The three arrays are passed to the HTML page, where it will be dealt with by Jinja.
         return render_template('glossview.html', splits=splits, tsplits=tsplits, ipa=ipa, con=con)
     # If the form has not been submitted, instead load the glosshome.html page with the form.
