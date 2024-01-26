@@ -31,7 +31,7 @@
             <p> {{ form.submit(class_="grb gena") }} </p>
             {% for portion in splits %}
             <h2s>{{ portion }}</h2s><br>
-            <p><input type="text" name="translated" value="{{ tsplits[splits.index(portion)] }} "><br></p>
+            <p><input type="text" name="translated" value="{{ tsplits[splits.index(portion)] }} " size=100><br></p>
             {% endfor %}
     </form>
 {% endblock %}

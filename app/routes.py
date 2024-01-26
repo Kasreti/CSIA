@@ -286,7 +286,7 @@ def createtext():
         # The database is saved.
         db.session.commit()
         match = Texts.query.filter(Texts.title == form.title.data).first()
-        if match.nstatus=="Checklist":
+        if match.status=="Checklist":
             return redirect(url_for('editchecklist', id=match.id))
         else:
             return redirect(url_for('modifytext', id=match.id))
@@ -369,7 +369,7 @@ def editchecklist(id):
         # This line finds the first match in the Lexicon database that contains the substring entry
         # within the definition. The order_by(collate()) section ensures that the search results will
         # be caps-insensitive and sort it by alphabetical order, and it takes the first result.
-        m2 = Lexicon.query.filter(Lexicon.definition.icontains(entry)).order_by(collate(Lexicon.word, 'NOCASE')).first()
+        m2 = Lexicon.query.filter(Lexicon.definition == entry).order_by(collate(Lexicon.word, 'NOCASE')).first()
         if m2 is not None:
             exist.append(m2.word)
             complete.append("Yes")
