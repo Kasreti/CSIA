@@ -21,7 +21,11 @@
         <wordh2>{{ word.partofspeech }}
         {% if word.irregular %}
          (irregular)
-        {% endif %}</wordh2><br>
+        {% endif %}
+        {% if word.wordclass %}
+            (class {{ word.wordclass }})
+        {% endif %}
+        </wordh2><br>
         <wordp>{{ word.definition }}. {{ word.notes }}</wordp><br>
         {% if word.partofspeech == "Verb" %}
         <br><wordh2>Inflections</wordh2>
