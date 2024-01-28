@@ -27,3 +27,6 @@ At the moment, the only method to run the application is:
 - Type `venv\Scripts\Activate`
 - Type `python -m flask run`
 - Go to `localhost:5000` in your browser.
+
+# Updating the programme
+When you download a new version of the programme, simply copy and paste the `app.db` file from the previous folder into the new folder. Replace the existing mock database.
