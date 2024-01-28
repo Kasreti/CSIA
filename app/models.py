@@ -38,7 +38,6 @@ class Lexicon(db.Model):
     conscript: so.Mapped[str] = so.mapped_column(sa.String(50), nullable=True)
     definition: so.Mapped[str] = so.mapped_column(sa.String(255), index=True)
     partofspeech: so.Mapped[str] = so.mapped_column(nullable=True)
-    infclass: so.Mapped[str] = so.mapped_column(sa.String(10), nullable=True)
     wordclass: so.Mapped[int] = so.mapped_column(sa.String(1), nullable=True)
     notes: so.Mapped[str] = so.mapped_column(nullable=True)
     etymology: so.Mapped[str] = so.mapped_column(nullable=True)

@@ -30,7 +30,7 @@ def createword():
             conscript = cs.concreate(form.word.data)
         else:
             conscript = form.conscript.data
-        newword = Lexicon(form.word.data, pronunciation, conscript, form.definition.data,
+        newword = Lexicon(form.word.data.strip(), pronunciation.strip(), conscript.strip(), form.definition.data.strip(),
                           selectedpos, form.wordclass.data, form.notes.data, form.etymology.data, None)
         db.session.add(newword)
         db.session.commit()
@@ -140,17 +140,17 @@ def modifyword(name):
         selectedpos = request.form.get('posselect')
         flash('{} {} successfully edited.'.format(selectedpos, form.word.data))
         refitem = Lexicon.query.get(originalid)
-        refitem.word = form.word.data
+        refitem.word = form.word.data.strip()
         if form.pronunciation.data == '':
-            refitem.pronunciation = cs.ipacreate(refitem.word)
+            refitem.pronunciation = cs.ipacreate(refitem.word.strip())
         else:
-            refitem.pronunciation = form.pronunciation.data
+            refitem.pronunciation = form.pronunciation.data.strip()
         if form.conscript.data == '':
-            refitem.conscript = cs.concreate(refitem.word)
+            refitem.conscript = cs.concreate(refitem.word.strip())
         else:
-            refitem.conscript = form.conscript.data
+            refitem.conscript = form.conscript.data.strip()
 
-        refitem.definition = form.definition.data
+        refitem.definition = form.definition.data.strip()
         refitem.partofspeech = selectedpos
         refitem.inflection = form.inflection.data
         refitem.wordclass = form.wordclass.data
@@ -323,7 +323,6 @@ def modifytext(id):
     splits.pop()
     if (match.translation != None):
         tsplits = re.split(r'(?<=[.!?,\-:;])\s*', match.translation)
-        tsplits.pop()
     else:
         tsplits = [''] * len(splits)
     if form.validate_on_submit():
@@ -339,8 +338,8 @@ def modifytext(id):
                     newtrans = newtrans + value + ' '
         match.status = request.form.get('status')
         match.title = form.title.data
-        match.content = form.content.data
-        match.translation = newtrans
+        match.content = form.content.data.strip()
+        match.translation = newtrans.strip()
         db.session.commit()
         return redirect(url_for('readtext', id=match.id))
     # The page is rendered.
@@ -423,11 +422,11 @@ def viewgloss(id):
     match = Texts.query.filter(Texts.id == id).first()
     status = ['Complete', 'Work in Progress', 'Incomplete']
     splits = re.split(r'(?<=[\.\!\?\,\-])\s*', match.translation)
-    splits.pop()
     tsplits = []
     ipa = []
     con = []
     for sentence in splits:
+        sentence.strip()
         tsplits.append(cs.gloss(sentence))
         ipa.append("/" + cs.ipacreate(sentence) + "/")
         con.append(cs.concreate(sentence))
