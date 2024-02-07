@@ -116,6 +116,7 @@ def modifyword(name):
     irf = []
     SG = ""
     PL = ""
+    # The section below fetches the irregular inflections, if any for the relevant word.
     if match.partofspeech == "Verb":
         for inflection in VerbInflections.query.filter(VerbInflections.irregular == 0).all():
             inf.append(inflection)
@@ -157,6 +158,7 @@ def modifyword(name):
         refitem.notes = form.notes.data
         refitem.irregular = form.irregular.data
         refitem.etymology = form.etymology.data
+        # The section below saves the relevant irregular inflections, if any.
         if form.irregular.data and selectedpos == "Verb":
             for aspect in inf:
                 m2 = VerbInflections.query.filter(VerbInflections.aspect == (match.word + " " + aspect.aspect)).first()
@@ -390,6 +392,7 @@ def inflections():
         ninf.append(inflection)
     if form.validate_on_submit():
         flash('Inflections have been updated.')
+        # This script fetches the values from each field.
         for aspect in vinf:
             for key in request.form.keys():
                 for value in request.form.getlist(key):
@@ -428,6 +431,7 @@ def viewgloss(id):
     for sentence in splits:
         sentence.strip()
         tsplits.append(cs.gloss(sentence))
+        # IPA notation requires slashes to be put before and after the IPA.
         ipa.append("/" + cs.ipacreate(sentence) + "/")
         con.append(cs.concreate(sentence))
     return render_template('gloss.html', match=match, status=status, splits=splits, tsplits=tsplits, ipa=ipa, con=con)

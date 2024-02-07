@@ -26,7 +26,6 @@ class createWord(FlaskForm):
     definition = StringField('Definition', validators=[DataRequired(), lengthcheck(max=255)])
     notes = TextAreaField('Notes', validators=[Optional()])
     etymology = TextAreaField('Etymology', validators=[Optional()])
-    inflection = StringField('Inflection', validators=[Optional()])
     irregular = BooleanField('Irregular', validators=[Optional()])
     csubmit = SubmitField('Create')
     esubmit = SubmitField('Save')
@@ -39,6 +38,9 @@ class deleteWord(FlaskForm):
     submit = SubmitField('Yes')
 
 class ipatable(FlaskForm):
+    # FOR AN EXPLANATION OF THE SHORTHANDS USED HERE,
+    # PLEASE REFER TO APPENDIX D.
+
     # NASALS
     nbilnas = BooleanField()
     vbilnas = BooleanField()
@@ -170,13 +172,13 @@ class ipatable(FlaskForm):
     submit = SubmitField('Save')
 
 class createText(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), lengthcheck(max=50)])
     content = TextAreaField('Text content', validators=[DataRequired()])
     submit = SubmitField('Create')
 
 # An example of a Flask Form.
 class modifyText(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), lengthcheck(max=50)])
     content = TextAreaField('Original content', validators=[DataRequired()])
     submit = SubmitField('Save')
 
